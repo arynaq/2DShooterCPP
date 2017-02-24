@@ -1,0 +1,12 @@
+#ignore all
+*
+
+#Unignore directories
+!*/
+!*.cpp
+!*.c
+!*.pdf
+!*.md
+!*.gitignore
+!*.hpp
+!Makefile
