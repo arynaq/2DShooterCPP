@@ -1,52 +1,54 @@
 #include <iostream>
-#include <GL/gl.h>
-#include <GL/glut.h>
-#include <GL/glu.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-
-void display(){
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    glBegin(GL_TRIANGLES);
-    glVertex3f(-0.5, -0.5, 0.0);
-    glVertex3f(0.5,0.0,0.0);
-    glVertex3f(0.0,0.5,0.0);
-    glEnd();
-
-    glutSwapBuffers();
-}
-
-void changeSize(int width, int height){
-    if(height ==0) height = 1;
-    float ratio = width*1.0/height;
-
-
-    std::cout<<"Resizing with w,h,r: "<<width<<","<<height<<","<<ratio<<std::endl;
-
-    // use the projection matrix
-    glMatrixMode(GL_PROJECTION);
-
-    // Reset matrix
-    glLoadIdentity();
-
-    // set the viewport to be the entire window
-    glViewport(0,0,width,height);
-
-    // set the correct perspective
-    gluPerspective(45,ratio,1,1000);
-    // get back to the modelview
-    glMatrixMode(GL_MODELVIEW);
-}
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 int main(int argc, char** argv){
-    glutInit(&argc,argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
-    glutInitWindowPosition(100,100);
-    glutInitWindowSize(320,320);
-    glutCreateWindow("GLUT - Tutorial");
 
-    glutDisplayFunc(display);
-    glutReshapeFunc(changeSize);
-    glutMainLoop();
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
+
+    GLFWwindow* window = glfwCreateWindow(800, 800, "LearnOpenGL", nullptr, nullptr);
+
+    if(window == nullptr) {
+        std::cout<<"Could noto creato windowo."<<std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, key_callback);
+    glewExperimental = GL_TRUE;
+
+    if(glewInit() != GLEW_OK) {
+        std::cout<<"Failed to initialize GLEW"<<std::endl;
+    }
+
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+
+    
+    while(!glfwWindowShouldClose(window)){
+        glfwPollEvents();
+
+
+        glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glfwSwapBuffers(window);
+
+    }
+
+    glfwTerminate();
     return 0;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode){
+    std::cout<<"Key:" <<key<<std::endl;
+    if(key==GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
 }
