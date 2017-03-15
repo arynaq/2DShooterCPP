@@ -2,9 +2,7 @@
 
 CC = g++
 CC_FLAGS = -Wall -Werror -pedantic -std=c++14 -DGLEW_STATIC
-LIBS = -lglfw -lrt -lm -ldl -lXrandr -lXinerama -lXxf86vm -lXext -lXcursor -lXrender -lXfixes -lX11 -lpthread -lxcb -lXau -lXdmcp -lGLEW -lGL
-
-
+LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 
 #File names
 EXEC = run
