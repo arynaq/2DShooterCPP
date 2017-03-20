@@ -1,16 +1,18 @@
 #pragma once
-#include <Entity.hpp>
+#include "Entity.hpp"
 #include <vector>
+#include "EntityComponentStorage.hpp"
+#include "EntityIdPool.hpp"
 
 class World {
     public:
+        using EntityArray = std::vector<Entity>;
         Entity createEntity();
+
+        bool isValid(const Entity& e) const;
 
 
     private:
-        static ID counter = 0;
-        std::vector<ID> entities;
-
         struct EntityAttributes {
             struct Attribute{
                 bool activated;
@@ -18,12 +20,14 @@ class World {
             };
 
 
-            EntityComponentStorage
+            EntityComponentStorage componentStorage;
             std::vector<Attribute> attributes;
         }
         m_entityAttributes;
 
+        EntityIdPool m_entityIdPool;
 
+    friend class Entity;
 
 };
 

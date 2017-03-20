@@ -6,6 +6,7 @@
 
 #define ENTITY_ID_INDEX_BIT_COUNT 20
 #define ENTITY_ID_COUNT_BIT_COUNT 12
+#define MAX_ENTITY_COUNT 1000
 
 class World;
 class Entity{
@@ -26,11 +27,24 @@ class Entity{
 
         Entity(World& world, ID id);
 
+
+        Entity(const Entity&) = default;
+        Entity(Entity&&) = default;
+        Entity& operator=(const Entity&) = default;
+        Entity& operator=(Entity&&) = default;
+        
         const ID& getID() const;
         World& getWorld() const;
 
         template<typename T, typename...Args>
         T& addComponent(Args&&... args);
+
+        bool isValid() const;
+
+        bool operator==(const Entity& other) const;
+        bool operator!=(const Entity& other) const {
+            return !operator==(other);
+        }
 
     private:
 
@@ -45,7 +59,7 @@ class Entity{
 
 template<typename T, typename...Args>
 T& Entity::addComponent(Args&&... args){
-    static_assert(std::is_base_of<Component,T>::value, "T ios not derived from Component.");
+    static_assert(std::is_base_of<Component,T>::value, "T is not derived from Component.");
     auto component = new T{std::forward<Args>(args)...};
     addComponent(component, ComponentTypeId<T>());
     return *component;

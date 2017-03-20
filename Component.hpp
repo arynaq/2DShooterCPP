@@ -3,11 +3,13 @@
 #include <type_traits>
 #include "ClassTypeId.hpp"
 
+#define MAX_COMPONENTS 1000
+
 
 class Component {
     public:
-
         virtual ~Component(){}
+        virtual void reset();
 };
 
 template<class T, class = typename std::enable_if<std::is_base_of<Component,T>::value>::type>
