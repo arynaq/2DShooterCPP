@@ -13,6 +13,9 @@ class pacman:
 		self._init_pacman()
 		self._init_ghost()
 
+	def __str__(self):
+		return str(self._map)
+
 	def _create_default_map(self):
 		return numpy.array([
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -57,8 +60,10 @@ class pacman:
 	def find_pacman(self):
 		pacman = numpy.where(self._map == 3)
 		ghost = numpy.where(self._map == 4)
+
 def main():
 	game = pacman("nowalls_map.pacmap")
+	print(game)
 
 if __name__ == "__main__":
 	main()
