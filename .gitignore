@@ -10,5 +10,6 @@
 !*.gitignore
 !*.hpp
 !Makefile
+!*.py
 
 !.Xresources
