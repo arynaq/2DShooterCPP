@@ -10,8 +10,8 @@ class pacman:
 				self._map = numpy.array([list(line) for line in f.read().strip().split()]).astype(int)
 		else:
 			self._map = self._create_default_map()
-		#self._init_pacman()
-		#self._init_ghost()
+		self._init_pacman()
+		self._init_ghost()
 
 	def _create_default_map(self):
 		return numpy.array([
