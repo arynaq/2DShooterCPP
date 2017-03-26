@@ -84,11 +84,29 @@ class pathfinder:
 		self.open_tiles.extend(adjacent_tiles)
 		self.open_tiles = list(set(self.open_tiles))
 
+class tile:
+
+	def __init__(self, pos, g_score=None, h_score=None, f_score=None):
+		self._pos = pos
+		self._g_score = g_score
+		self._h_score = h_score
+		self._f_score = f_score
+
+	def __eq__(self, other):
+		return self._pos == other._pos
+
+	def __hash__(self):
+		return hash(self._pos)
+
+	def __str__(self):
+		return str(self._pos)
+
+	def __repr__(self):
+		return str(self._pos)
+
 def main():
 	game = pacman_map("nowalls_map.pacmap")
-	finder = pathfinder(game)
-
-	
+	finder = pathfinder(game)	
 
 if __name__ == "__main__":
 	main()
