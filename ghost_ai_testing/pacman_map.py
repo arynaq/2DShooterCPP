@@ -97,14 +97,24 @@ class pathfinder:
 			t.g_score = base_tile.g_score + 1
 			t.h_score = self._calculate_h_score(t, target_tile)
 			t.f_score = t.g_score + t.h_score
-		min_f_value_adjacent = min(adjacent_tiles)
-		min_f_value_open = min(self.closed_tiles)
+		min_f_value_adjacent = min(adjacent_tiles) if adjacent_tiles else None
+		min_f_value_open = min(self.closed_tiles) if self.closed_tiles else None
 		min_f_value = min_f_value_adjacent if min_f_value_adjacent <= min_f_value_open else min_f_value_open
 		for t in adjacent_tiles:
 			if t not in self.open_tiles:
 				self.open_tiles.append(t)
 		self._draw_map(base_tile)
 		x = raw_input("press for next iteration")
+		if min_f_value not in self.open_tiles:
+			print ("adjacent min value {}".format(min_f_value_adjacent))
+			print ("open min value {}".format(min_f_value_open))
+			print ("chosen min value {}".format(min_f_value))
+			print ("open tiles:")
+			for t in self.open_tiles:
+				print t
+			print ("adjacent tiles:")
+			for t in adjacent_tiles:
+				print t 
 		self.open_tiles.remove(min_f_value)
 		self._a_star(min_f_value, target_tile)
 
@@ -132,6 +142,9 @@ class tile:
 
 	def __eq__(self, other):
 		return self.pos == other.pos
+
+	def __neq__(self, other):
+		return self.pos != other.pos
 
 	def __hash__(self):
 		return hash(self.pos)
