@@ -1,11 +1,10 @@
 import numpy
 import os 
 import random
-from operator import attrgetter
 
 class pacman_map:
 
-	def __init__(self, custom_map = None):
+	def __init__(self, custom_map=None):
 		if custom_map:
 			with open(custom_map, "rb") as f:
 				self._map = numpy.array([list(line) for line in f.read().strip().split()]).astype(int)
@@ -60,6 +59,7 @@ class pacman_map:
 
 	def map(self):
 		return self._map
+
 
 class pathfinder:
 
@@ -121,6 +121,7 @@ class pathfinder:
 	def find(self):
 		return self._a_star(self._find_ghost(), self._find_pacman())
 
+
 class tile:
 
 	def __init__(self, pos, g_score=None, h_score=None, f_score=None):
@@ -148,7 +149,7 @@ class tile:
 		return cmp(self.f_score, other.f_score)
 
 def main():
-	game = pacman_map("nowalls_map.pacmap")
+	game = pacman_map("onewall_map.pacmap")
 	finder = pathfinder(game)
 	finder.find()
 
