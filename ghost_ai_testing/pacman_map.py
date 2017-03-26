@@ -80,7 +80,7 @@ class pathfinder:
 		right = tuple([pos[0] + 1, pos[1]]) if (pos[0] + 1) >= 0 else None
 		down =  tuple([pos[0], pos[1] + 1]) if (pos[1] + 1) < self._map.shape[0] else None
 		left = tuple([pos[0] - 1, pos[1]]) if (pos[0] - 1) < self._map.shape[1] else None
-		adjacent_tiles = [tile for tile in [up, right, down, left] if self._map[tile] == 1]
+		adjacent_tiles = [tile((pos)) for pos in [up, right, down, left] if self._map[pos] == 1]
 		self.open_tiles.extend(adjacent_tiles)
 		self.open_tiles = list(set(self.open_tiles))
 
@@ -99,10 +99,10 @@ class tile:
 		return hash(self._pos)
 
 	def __str__(self):
-		return str(self._pos)
+		return "tile{}".format(self._pos)
 
 	def __repr__(self):
-		return str(self._pos)
+		return "tile{}".format(self._pos)
 
 def main():
 	game = pacman_map("nowalls_map.pacmap")
