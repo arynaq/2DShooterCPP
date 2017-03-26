@@ -66,47 +66,58 @@ class pathfinder:
 		self._map = pacman_map.map()
 		self.open_tiles = []
 		self.closed_tiles = []
-		self._search_adjacent_tiles()
 
 	def _find_pacman(self):
-		return tuple([int(pos) for pos in numpy.where(self._map == 3)])
+		return tile(tuple([int(pos) for pos in numpy.where(self._map == 3)]))
 
 	def _find_ghost(self):
-		return tuple([int(pos) for pos in numpy.where(self._map == 4)])
+		pos = tuple([int(pos) for pos in numpy.where(self._map == 4)])
+		f_score = self._calculate_f_score(pos, self._find_pacman())
+		return tile(pos, 0, f_score, f_score)
 
-	def _search_adjacent_tiles(self):
-		pos = self._find_ghost()
+	def _search_adjacent_tiles(self, tile):
+		pos = tile.pos
 		up = tuple([pos[0], pos[1] - 1]) if (pos[1] - 1) >= 0 else None
 		right = tuple([pos[0] + 1, pos[1]]) if (pos[0] + 1) >= 0 else None
 		down =  tuple([pos[0], pos[1] + 1]) if (pos[1] + 1) < self._map.shape[0] else None
 		left = tuple([pos[0] - 1, pos[1]]) if (pos[0] - 1) < self._map.shape[1] else None
-		adjacent_tiles = [tile((pos)) for pos in [up, right, down, left] if self._map[pos] == 1]
-		self.open_tiles.extend(adjacent_tiles)
-		self.open_tiles = list(set(self.open_tiles))
+		adjacent_tiles = [tile((pos)) for pos in [up, right, down, left] if self._map[pos] == 1 and tile(pos) not in self.closed_tiles]
+		return adjacent_tiles
+
+	def a_star(self):
+		start_pos = self._find_ghost()
+		print start_pos.f_score
+
+	def _calculate_f_score(self, base_pos, target_pos):
+		return abs(base_pos[0] - target_pos[0]) + abs(base_pos[1] - target_pos[1])
 
 class tile:
 
 	def __init__(self, pos, g_score=None, h_score=None, f_score=None):
-		self._pos = pos
-		self._g_score = g_score
-		self._h_score = h_score
-		self._f_score = f_score
+		self.pos = pos
+		self.g_score = g_score
+		self.h_score = h_score
+		self.f_score = f_score
 
 	def __eq__(self, other):
-		return self._pos == other._pos
+		return self.pos == other.pos
 
 	def __hash__(self):
-		return hash(self._pos)
+		return hash(self.pos)
 
 	def __str__(self):
-		return "tile{}".format(self._pos)
+		return "tile{}".format(self.pos)
 
 	def __repr__(self):
-		return "tile{}".format(self._pos)
+		return "tile{}".format(self.pos)
+
+	def __getitem__(self, i):
+		return self.pos[i]
 
 def main():
 	game = pacman_map("nowalls_map.pacmap")
-	finder = pathfinder(game)	
+	finder = pathfinder(game)
+	finder.a_star()
 
 if __name__ == "__main__":
 	main()
