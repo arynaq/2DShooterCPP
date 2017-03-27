@@ -1,6 +1,7 @@
 import numpy
 import os 
 import random
+import time
 
 class pacman_map:
 
@@ -67,6 +68,8 @@ class pathfinder:
 		self._map = pacman_map.map()
 		self.open_tiles = []
 		self.closed_tiles = []
+		self.backtrack = {}
+		self.path = []
 
 	def _find_pacman(self):
 		return tile(tuple([int(pos) for pos in numpy.where(self._map == 3)]))
@@ -74,6 +77,7 @@ class pathfinder:
 	def _find_ghost(self):
 		pos = tuple([int(pos) for pos in numpy.where(self._map == 4)])
 		h_score = self._calculate_h_score(pos, self._find_pacman())
+		self.backtrack[pos] = None
 		return tile(pos, 0, h_score, h_score)
 
 	def _search_adjacent_tiles(self, t):
@@ -85,18 +89,20 @@ class pathfinder:
 		adjacent_tiles = [tile(p) for p in [up, right, down, left] if (self._map[p] == 1 or self._map[p] == 3)  and tile(p) not in self.closed_tiles]
 		return adjacent_tiles
 		
-	def _calculate_h_score(self, base_pos, target_pos):
-		return pow(abs(base_pos[0] - target_pos[0]),2) + pow(abs(base_pos[1] - target_pos[1]),2)
+	def _calculate_h_score(self, base_pos, target_pos, type="manhattan"):
+		if type == "manhattan":
+			return abs(base_pos[0] - target_pos[0]) + abs(base_pos[1] - target_pos[1])
+		if type == "eucledian":
+			return pow(abs(base_pos[0] - target_pos[0]),2) + pow(abs(base_pos[1] - target_pos[1]),2)
 
 	def _a_star(self, base_tile, target_tile):
-		if base_tile.pos == target_tile.pos:
-			return 1
 		self.closed_tiles.append(base_tile)
 		adjacent_tiles = self._search_adjacent_tiles(base_tile)
 		for t in adjacent_tiles:
 			t.g_score = base_tile.g_score + 1
 			t.h_score = self._calculate_h_score(t, target_tile)
 			t.f_score = t.g_score + t.h_score
+
 		min_f_value_adjacent = min(adjacent_tiles) if adjacent_tiles else None
 		min_f_value_open = min(self.open_tiles) if self.open_tiles else None
 		if min_f_value_open and min_f_value_adjacent:
@@ -105,24 +111,36 @@ class pathfinder:
 			min_f_value = min_f_value_adjacent or min_f_value_open
 		for t in adjacent_tiles:
 			if t not in self.open_tiles:
+				self.backtrack[t.pos] = base_tile.pos
 				self.open_tiles.append(t)
-		self._draw_map(base_tile)
-		x = raw_input("press for next iteration")
 		self.open_tiles.remove(min_f_value)
+		if min_f_value == target_tile:
+			return self._backtrack()
 		self._a_star(min_f_value, target_tile)
 
-	def _draw_map(self, current_tile):
-		for _ in range(100):
-			print ("\n")
-		for t in self.closed_tiles:
-			self._map[t.pos] = 8
-		for t in self.open_tiles:
-			self._map[t.pos] = 7
-		self._map[current_tile.pos] = 5
-		print self._map
+	def _backtrack(self):
+		current_path = self._find_pacman().pos
+		start = self._find_ghost().pos
+		while current_path != start:
+			current_path = self.backtrack[current_path]
+			if current_path != start:
+				self.path.append(current_path)
+		self.path.reverse()
+
+	def _draw_map(self):
+		while True:
+			tmp = numpy.copy(self._map)
+			for pos in self.path:
+				print(chr(27) + "[2J")
+				tmp[pos] = 8
+				print tmp
+				time.sleep(0.1)
+			time.sleep(0.5)
 
 	def find(self):
-		return self._a_star(self._find_ghost(), self._find_pacman())
+		self._a_star(self._find_ghost(), self._find_pacman())
+		self._draw_map()
+
 
 
 class tile:
@@ -155,7 +173,7 @@ class tile:
 		return cmp(self.f_score, other.f_score)
 
 def main():
-	game = pacman_map()
+	game = pacman_map("squarewall_map.pacmap")
 	finder = pathfinder(game)
 	finder.find()
 
