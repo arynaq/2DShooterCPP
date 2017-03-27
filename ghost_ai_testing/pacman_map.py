@@ -98,8 +98,11 @@ class pathfinder:
 			t.h_score = self._calculate_h_score(t, target_tile)
 			t.f_score = t.g_score + t.h_score
 		min_f_value_adjacent = min(adjacent_tiles) if adjacent_tiles else None
-		min_f_value_open = min(self.closed_tiles) if self.closed_tiles else None
-		min_f_value = min_f_value_adjacent if min_f_value_adjacent <= min_f_value_open else min_f_value_open
+		min_f_value_open = min(self.open_tiles) if self.open_tiles else None
+		if min_f_value_open and min_f_value_adjacent:
+			min_f_value = min_f_value_adjacent if min_f_value_adjacent <= min_f_value_open else min_f_value_open
+		else:
+			min_f_value = min_f_value_adjacent or min_f_value_open
 		for t in adjacent_tiles:
 			if t not in self.open_tiles:
 				self.open_tiles.append(t)
