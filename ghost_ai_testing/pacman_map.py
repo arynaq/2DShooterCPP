@@ -130,12 +130,19 @@ class pathfinder:
 	def _draw_map(self):
 		while True:
 			tmp = numpy.copy(self._map)
+			for t in self.closed_tiles:
+				print(chr(27) + "[2J")
+				tmp[t.pos] = 7
+				print tmp
+				print "searching"
+				time.sleep(0.05)
 			for pos in self.path:
 				print(chr(27) + "[2J")
 				tmp[pos] = 8
 				print tmp
-				time.sleep(0.1)
-			time.sleep(0.5)
+				print "backtracking"
+				time.sleep(0.05)
+			time.sleep(0.1)
 
 	def find(self):
 		self._a_star(self._find_ghost(), self._find_pacman())
@@ -173,7 +180,7 @@ class tile:
 		return cmp(self.f_score, other.f_score)
 
 def main():
-	game = pacman_map("squarewall_map.pacmap")
+	game = pacman_map("doublewall_map.pacmap")
 	finder = pathfinder(game)
 	finder.find()
 
