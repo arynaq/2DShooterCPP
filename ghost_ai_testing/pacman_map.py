@@ -137,14 +137,14 @@ class pathfinder:
 				tmp[t.pos] = 7
 				print tmp
 				print "searching"
-				print "heuristic = {}, iterations = {}".format(self.heuristic, len(self.closed_tiles))
+				print "heuristic = {}, iterations = {}, path length = {}".format(self.heuristic, len(self.closed_tiles), len(self.path))
 				time.sleep(0.05)
 			for pos in self.path:
 				print(chr(27) + "[2J")
 				tmp[pos] = 8
 				print tmp
 				print "backtracking"
-				print "heuristic = {}, iterations = {}".format(self.heuristic, len(self.closed_tiles))
+				print "heuristic = {}, iterations = {}, path length = {}".format(self.heuristic, len(self.closed_tiles), len(self.path))
 				time.sleep(0.05)
 			time.sleep(0.05)
 
