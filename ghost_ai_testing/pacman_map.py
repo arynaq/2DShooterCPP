@@ -82,7 +82,7 @@ class pathfinder:
 		right = tuple([pos[0] + 1, pos[1]]) if (pos[0] + 1) >= 0 else None
 		down =  tuple([pos[0], pos[1] + 1]) if (pos[1] + 1) < self._map.shape[0] else None
 		left = tuple([pos[0] - 1, pos[1]]) if (pos[0] - 1) < self._map.shape[1] else None
-		adjacent_tiles = [tile(p) for p in [up, right, down, left] if self._map[p] == 1 or 3 and tile(p) not in self.closed_tiles]
+		adjacent_tiles = [tile(p) for p in [up, right, down, left] if (self._map[p] == 1 or self._map[p] == 3)  and tile(p) not in self.closed_tiles]
 		return adjacent_tiles
 		
 	def _calculate_h_score(self, base_pos, target_pos):
@@ -155,7 +155,7 @@ class tile:
 		return cmp(self.f_score, other.f_score)
 
 def main():
-	game = pacman_map("onewall_map.pacmap")
+	game = pacman_map()
 	finder = pathfinder(game)
 	finder.find()
 
