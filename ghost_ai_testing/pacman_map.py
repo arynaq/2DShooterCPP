@@ -64,12 +64,14 @@ class pacman_map:
 
 class pathfinder:
 
-	def __init__(self, pacman_map):
+	def __init__(self, pacman_map, heuristic="manhattan"):
 		self._map = pacman_map.map()
 		self.open_tiles = []
 		self.closed_tiles = []
 		self.backtrack = {}
 		self.path = []
+		assert heuristic in ["manhattan", "euclidean"], "{} not a know heuristic".format(heuristic)
+		self.heuristic = heuristic
 
 	def _find_pacman(self):
 		return tile(tuple([int(pos) for pos in numpy.where(self._map == 3)]))
@@ -89,10 +91,10 @@ class pathfinder:
 		adjacent_tiles = [tile(p) for p in [up, right, down, left] if (self._map[p] == 1 or self._map[p] == 3)  and tile(p) not in self.closed_tiles]
 		return adjacent_tiles
 		
-	def _calculate_h_score(self, base_pos, target_pos, type="manhattan"):
-		if type == "manhattan":
+	def _calculate_h_score(self, base_pos, target_pos):
+		if self.heuristic == "manhattan":
 			return abs(base_pos[0] - target_pos[0]) + abs(base_pos[1] - target_pos[1])
-		if type == "eucledian":
+		elif self.heuristic == "euclidean":
 			return pow(abs(base_pos[0] - target_pos[0]),2) + pow(abs(base_pos[1] - target_pos[1]),2)
 
 	def _a_star(self, base_tile, target_tile):
@@ -128,21 +130,23 @@ class pathfinder:
 		self.path.reverse()
 
 	def _draw_map(self):
-		while True:
+		for _ in range(3):
 			tmp = numpy.copy(self._map)
 			for t in self.closed_tiles:
 				print(chr(27) + "[2J")
 				tmp[t.pos] = 7
 				print tmp
 				print "searching"
+				print "heuristic = {}, iterations = {}".format(self.heuristic, len(self.closed_tiles))
 				time.sleep(0.05)
 			for pos in self.path:
 				print(chr(27) + "[2J")
 				tmp[pos] = 8
 				print tmp
 				print "backtracking"
+				print "heuristic = {}, iterations = {}".format(self.heuristic, len(self.closed_tiles))
 				time.sleep(0.05)
-			time.sleep(0.1)
+			time.sleep(0.05)
 
 	def find(self):
 		self._a_star(self._find_ghost(), self._find_pacman())
@@ -181,8 +185,10 @@ class tile:
 
 def main():
 	game = pacman_map("doublewall_map.pacmap")
-	finder = pathfinder(game)
+	finder = pathfinder(game, heuristic="manhattan")
 	finder.find()
+	finder_2 = pathfinder(game, heuristic="euclidean")
+	finder_2.find()
 
 if __name__ == "__main__":
 	main()
