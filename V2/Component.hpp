@@ -5,6 +5,10 @@
 #include "ClassTypeId.hpp"
 
 
+#define MAX_COMPONENTS 1000
+
+
+
 class Component {
 
     public:
@@ -33,6 +37,6 @@ using ComponentArray = std::vector<Component*>;
  *
  * */
 template <class T>
-TypeID ComponentTypeId(){
+TypeID ComponentTypeID(){
     return ClassTypeId<Component>::GetTypeID<T>();
 }

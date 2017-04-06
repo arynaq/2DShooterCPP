@@ -18,6 +18,8 @@ class Entity {
             {
             }
 
+            ID() : ID(0,0) {}
+
             inline
             u32 value() const {
                 return (counter << ENTITY_COUNTER_BITS  )| index;
@@ -30,9 +32,13 @@ class Entity {
         World& getWorld() const;
 
 
-        ID& getID() const;
+        const ID& getID() const;
 
 
+        /**
+         * Adds a new component T that is derived from Component,
+         * looks up its typeid using ClassTypeID<Component>::GetTypeID<T>())
+         * */
         template<typename T, typename...Args>
         T& addComponent(Args&&...args);
 
@@ -59,7 +65,56 @@ class Entity {
         ComponentArray getComponents() const;
 
 
+
+        /**
+         * Check if this entity is valid in its own world.
+         *
+         * Only way it can be valid is if the worlds entity storage created it
+         * and it is also alive.
+         * */
+        bool isValid() const;
+
+
     private:
         ID m_id;
         World* m_world;
+
+        /** Private helper method for adding a component to this entity
+         *  TypeID is a typedef for std::size_t and is unique identifier per 
+         *  component type
+         *  */
+        void addComponent(Component* component, TypeID componentTypeID);
+        void removeComponent(TypeID componentTypeID);
+        Component& getComponent(TypeID componentTypeID);
 };
+
+template<typename T>
+void assertComponentDerived(){
+    static_assert(std::is_base_of<Component,T>(), "T is not derived from component...");
+}
+
+
+template<typename T, typename... Args>
+T& Entity::addComponent(Args&&...args){
+    assertComponentDerived<T>();
+    auto component = new T{std::forward<Args>(args)...};
+    addComponent(component, ComponentTypeID<T>());
+}
+
+
+
+template<typename T>
+void Entity::removeComponent() {
+    assertComponentDerived<T>();
+    removeComponent(ComponentTypeID<T>());
+}
+
+
+/**
+ * Returns a references to the component of type T that this entity has 
+ * */
+template<typename T>
+T& Entity::getComponent() const {
+    assertComponentDerived<T>();
+    return static_cast<T&>(getComponent(ComponentTypeID<T>()));
+}

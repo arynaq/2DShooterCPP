@@ -9,6 +9,10 @@ class ClassTypeId {
     public:
         /**
          * Create an immutable TypeID per T
+         *
+         * Since the counter is static only one counter per T is created
+         * While any time a new type is passed as template argument a new counter
+         * for that type is created.
          * */
         template <typename T>
         static TypeID GetTypeID(){
