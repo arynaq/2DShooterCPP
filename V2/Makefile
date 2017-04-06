@@ -8,10 +8,13 @@ LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 EXEC = run
 SOURCES = $(wildcard *.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
+SRCDIR := src
+INCDIR := inc
+
 
 #Main target
 $(EXEC): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LIBS) -o $(EXEC)
+	$(CC) $(OBJECTS) $(LIBS) $(LL_FLAGS) -o $(EXEC)
 
 # To obtain object files
 %.o: %.cpp

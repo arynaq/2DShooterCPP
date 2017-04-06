@@ -33,3 +33,8 @@ void Entity::removeAllComponents(){
 bool Entity::isValid() const {
     return getWorld().isValid(*this);
 }
+
+
+bool Entity::operator==(const Entity& entity) const {
+    return m_id.value() == entity.m_id.value() && m_world == entity.m_world;
+}
