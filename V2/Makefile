@@ -1,25 +1,52 @@
-#Declaration of variables
 
+## Files and directories
+SRCDIR := src
+INCDIR := inc
+BUILDDIR := obj
+TARGET := pacman
+TARGETDIR := bin
+SRCEXT := cpp
+OBJEXT := o
+
+
+## Flags to linker & compiler
 CC = g++
 CC_FLAGS = -Wall -Werror -pedantic -std=c++14 -DGLEW_STATIC
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system
-
-#File names
-EXEC = run
-SOURCES = $(wildcard *.cpp)
-OBJECTS = $(SOURCES:.cpp=.o)
-SRCDIR := src
-INCDIR := inc
+INC := -I$(INCDIR)
 
 
-#Main target
-$(EXEC): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LIBS) $(LL_FLAGS) -o $(EXEC)
 
-# To obtain object files
-%.o: %.cpp
-	$(CC) -c $(CC_FLAGS) $< -o $@
+print-%  : ; @echo $* = $($*)
 
-# To remove generated files
-clean:
-	rm -f $(EXEC) $(OBJECTS)
+
+### FUNSTUFF
+SOURCES := $(shell find $(SRCDIR) -type f -name '*.$(SRCEXT)')
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+
+
+#Defauilt Make
+all: $(TARGET)
+
+#Make the Directories
+directories:
+	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(BUILDDIR)
+
+
+#Link
+$(TARGET): $(OBJECTS)
+	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+
+#Compile
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CC) $(CC_FLAGS) $(INC) -c -o $@ $<
+
+
+
+#Clean only Objecst
+clean: 
+	rm -f $(OBJECTS)
+	rm -f $(TARGETDIR)/$(TARGET)
+

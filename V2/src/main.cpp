@@ -4,6 +4,6 @@
 #include "World.hpp"
 
 int main(){
-    World w;
+    World w(100);
     return 0;
 }
