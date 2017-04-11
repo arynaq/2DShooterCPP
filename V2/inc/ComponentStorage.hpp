@@ -26,6 +26,7 @@ class ComponentStorage {
          * */
         void addComponent(Entity& e, Component* c, TypeID componentTypeID);
         void removeComponent(Entity& e, TypeID componentTypeID);
+        void removeAllComponents(Entity& e);
         Component& getComponent(const Entity& entity, TypeID componentTypeID) const;
         ComponentArray getComponent(const Entity& entity) const;
         ComponentTypeList getComponentTypeList(const Entity& entity) const;

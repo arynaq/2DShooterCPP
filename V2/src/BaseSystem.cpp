@@ -19,11 +19,15 @@ World& BaseSystem::getWorld() const {
     return  *m_world;
 }
 
+/** 
+ * Called from world refresh **/
 void BaseSystem::addEntity(Entity& entity){
     m_entities.push_back(entity);
     onEntityAdded(entity);
 }
 
+
+/** Called from world refresh **/
 void BaseSystem::removeEntity(Entity& entity){
     m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entity), m_entities.end());
     onEntityRemoved(entity);

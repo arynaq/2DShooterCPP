@@ -29,8 +29,11 @@ void Entity::removeComponent(TypeID componentTypeID){
     getWorld().m_entityAttributes.componentStorage.removeComponent(*this, componentTypeID);
 }
 
-void Entity::removeAllComponents(){
+Component& Entity::getComponent(TypeID componentTypeID) const{
+    return getWorld().m_entityAttributes.componentStorage.getComponent(*this, componentTypeID);
+}
 
+void Entity::removeAllComponents(){
 }
 
 bool Entity::isValid() const {

@@ -10,7 +10,7 @@ using EntityArray = World::EntityArray;
 
 class PacmanGame {
     public:
-        PacmanGame(sf::RenderTarget& renderer) : m_renderer(&renderer){}
+        PacmanGame(sf::RenderTarget& renderer) : m_spriteRenderer(renderer){}
         void init();
         void update(float dt);
         void render();

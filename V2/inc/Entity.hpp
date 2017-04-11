@@ -96,7 +96,7 @@ class Entity {
          *  */
         void addComponent(Component* component, TypeID componentTypeID);
         void removeComponent(TypeID componentTypeID);
-        Component& getComponent(TypeID componentTypeID);
+        Component& getComponent(TypeID componentTypeID) const;
 };
 
 template<typename T>

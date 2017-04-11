@@ -24,7 +24,5 @@ class BaseSystem {
         World* m_world;
         Filter m_filter;
         std::vector<Entity> m_entities;
-
-
         friend class World;
 };

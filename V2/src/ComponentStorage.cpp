@@ -10,10 +10,13 @@ ComponentStorage::ComponentStorage(std::size_t entityAmmount) :
 
 ComponentTypeList ComponentStorage::getComponentTypeList(const Entity& entity) const {
     Entity::ID::u32 index = entity.getID().index;
-    EntityComponents& entityData = m_componentEntries[index];
-    return entityData.componentTypeList;
+    return m_componentEntries[index].componentTypeList;
 }
 
+Component& ComponentStorage::getComponent(const Entity& entity, TypeID componentTypeID) const {
+    Entity::ID::u32 index = entity.getID().index;
+    return *(m_componentEntries[index].components)[componentTypeID];
+}
 
 void ComponentStorage::addComponent(Entity& e, Component* c, TypeID componentTypeID) {
      assert(e.isValid() && "Invalid entity cannot have components added to it ");
@@ -43,5 +46,15 @@ void ComponentStorage::removeComponent(Entity& entity, TypeID componentTypeID){
     /* Invalidate the component for this given entity 
      * */
     entityData.componentTypeList[componentTypeID] = false;
+}
+
+void ComponentStorage::removeAllComponents(Entity& entity){
+    auto index = entity.getID().index;
+    auto& componentDataEntries = m_componentEntries[index];
+    
+    for(auto& component : componentDataEntries.components){
+        component.reset();
+    }
+    componentDataEntries.componentTypeList.reset();
 }
 
