@@ -28,6 +28,8 @@ class ComponentStorage {
         void removeComponent(Entity& e, TypeID componentTypeID);
         Component& getComponent(const Entity& entity, TypeID componentTypeID) const;
         ComponentArray getComponent(const Entity& entity) const;
+        ComponentTypeList getComponentTypeList(const Entity& entity) const;
+
 
     private:
         /**
@@ -41,7 +43,9 @@ class ComponentStorage {
          * */
         struct EntityComponents {
             EntityComponents() = default;
+            /** The actual components an entity has **/
             ImplementationArray components;
+            /** Bitset of what components an entity has **/
             ComponentTypeList componentTypeList;
         };
 

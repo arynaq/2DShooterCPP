@@ -3,6 +3,9 @@
 #include "World.hpp"
 
 
+Entity::Entity() : m_world{nullptr}{
+}
+
 Entity::Entity(World& world, ID id) :
     m_id{id},
     m_world{&world}
@@ -37,4 +40,16 @@ bool Entity::isValid() const {
 
 bool Entity::operator==(const Entity& entity) const {
     return m_id.value() == entity.m_id.value() && m_world == entity.m_world;
+}
+
+void Entity::activate(){
+    getWorld().activateEntity(*this);
+}
+
+void Entity::deactivate(){
+    getWorld().deactivateEntity(*this);
+}
+
+void Entity::kill(){
+    getWorld().killEntity(*this);
 }

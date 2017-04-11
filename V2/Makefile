@@ -8,7 +8,6 @@ TARGETDIR := bin
 SRCEXT := cpp
 OBJEXT := o
 
-
 ## Flags to linker & compiler
 CC = g++
 CC_FLAGS = -Wall -Werror -pedantic -std=c++14 -DGLEW_STATIC

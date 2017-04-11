@@ -12,6 +12,9 @@ class System : public BaseSystem {
         }
 };
 
+/** As the other TypeIDs this ensures that we get a unique identifier per new
+ * class deriving from BaseSystem
+ * */
 template <class T>
 TypeID SystemTypeId(){
     return ClassTypeId<BaseSystem>::GetTypeID<T>();

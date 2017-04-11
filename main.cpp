@@ -1,21 +1,8 @@
-#include <SFML/Graphics.hpp>
+#include <iostream>
 #include "Entity.hpp"
+#include "System.hpp"
+#include "World.hpp"
 
-int main(int argc, char** argv){
-    sf::RenderWindow window(sf::VideoMode(200,600), "SFML Works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
-    while(window.isOpen()){
-        sf::Event event;
-        while(window.pollEvent(event)){
-            if(event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
+int main(){
     return 0;
 }

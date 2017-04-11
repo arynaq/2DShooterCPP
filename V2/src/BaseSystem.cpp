@@ -29,3 +29,7 @@ void BaseSystem::removeEntity(Entity& entity){
     onEntityRemoved(entity);
 }
 
+const std::vector<Entity>& BaseSystem::getEntities() const{
+    return m_entities;
+}
+

@@ -8,6 +8,13 @@ ComponentStorage::ComponentStorage(std::size_t entityAmmount) :
 }
 
 
+ComponentTypeList ComponentStorage::getComponentTypeList(const Entity& entity) const {
+    Entity::ID::u32 index = entity.getID().index;
+    EntityComponents& entityData = m_componentEntries[index];
+    return entityData.componentTypeList;
+}
+
+
 void ComponentStorage::addComponent(Entity& e, Component* c, TypeID componentTypeID) {
      assert(e.isValid() && "Invalid entity cannot have components added to it ");
 

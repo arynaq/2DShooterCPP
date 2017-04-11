@@ -2,12 +2,15 @@
 #include "Entity.hpp"
 #include "Component.hpp"
 #include "EntityIDPool.hpp"
-#include <vector>
 #include "ComponentStorage.hpp"
+#include "System.hpp"
+#include <memory>
+#include <unordered_map>
 
 class World {
     public:
         using EntityArray = std::vector<Entity>;
+        using SystemArray = std::unordered_map<TypeID, std::unique_ptr<BaseSystem>>;
 
         World();
         /**
@@ -38,18 +41,34 @@ class World {
          * Kills the given entity
          * */
         void killEntity(Entity& entity);
-
-
-
+        void activateEntity(Entity& entity);
         void deactivateEntity(Entity& entity);
 
 
         bool isValid(const Entity& e) const;
 
+        /** 
+         * Responsible for attaching entities to their corresponding system
+         * Responsible for moving entities between the different caches
+         * Responsible for cleaning entities from systems once they are dead
+         *
+         *
+         * Must be called every update of the game
+         * @Todo: Threadsafe
+         * */
+
+        void refresh();
+
+
+        template <typename TSystem>
+        void addSystem(TSystem& system);
+
+
 
     private:
         friend class Entity;
         EntityIDPool m_entityIDPool;
+        SystemArray m_systems;
 
 
         struct EntityAttributes {
@@ -95,4 +114,14 @@ class World {
                 deactivated.clear();
             }
         } m_cache;
+
+        /** Helper method for adding a system of the given type **/
+        void addSystem(BaseSystem& system, TypeID systemTypeId);
 };
+
+
+template <typename TSystem>
+void World::addSystem(TSystem& system){
+    static_assert(std::is_base_of<BaseSystem,TSystem>(), "System is not derived from BaseSystem..");
+    addSystem(system, SystemTypeId<TSystem>());
+}

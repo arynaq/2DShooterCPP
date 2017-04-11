@@ -27,6 +27,7 @@ class Entity {
         };
 
 
+        Entity();
         Entity(World& world, ID id);
 
         World& getWorld() const;
@@ -78,6 +79,11 @@ class Entity {
         bool operator!=(const Entity& entity) const {
             return !operator==(entity);
         }
+
+
+        void activate();
+        void deactivate();
+        void kill();
 
 
     private:
