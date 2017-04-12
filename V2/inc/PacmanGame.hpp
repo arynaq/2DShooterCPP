@@ -6,11 +6,10 @@
 #include "SpriteRenderingSystem.hpp"
 
 
-using EntityArray = World::EntityArray;
 
 class PacmanGame {
     public:
-        PacmanGame(sf::RenderTarget& renderer) : m_spriteRenderer(renderer){}
+        PacmanGame(sf::RenderTarget& renderer);
         void init();
         void update(float dt);
         void render();
@@ -24,14 +23,16 @@ class PacmanGame {
 
     private:
         bool m_running;
-        sf::RenderTarget* m_renderer;
+        sf::RenderTarget* m_renderTarget;
         World m_world;
         Entity m_player;
-        EntityArray m_entities;
 
         /** Systems **/
-        SpriteRenderingSystem m_spriteRenderer;
-        InputSystem m_inputsystem;
+        SpriteRenderingSystem m_spriteRenderingSystem;
+        InputSystem m_inputSystem;
+        TextureCacheSystem m_textureCache;
+
+        void loadTextures();
 };
 
 

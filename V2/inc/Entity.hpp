@@ -3,6 +3,7 @@
 #include "Component.hpp"
 
 #define ENTITY_COUNTER_BITS 16
+#define MAX_ENTITY 1000
 
 class World;
 class Entity {
@@ -110,6 +111,7 @@ T& Entity::addComponent(Args&&...args){
     assertComponentDerived<T>();
     auto component = new T{std::forward<Args>(args)...};
     addComponent(component, ComponentTypeID<T>());
+    return *component;
 }
 
 

@@ -6,6 +6,4 @@
 struct InputSystem : System<Requires<PlayerComponent, VelocityComponent>> {
     public:
         void update(float dt);
-    private:
-        void setPlayerState(Entity& entity, PlayerComponent& p, PlayerComponent::PlayerState state);
 };

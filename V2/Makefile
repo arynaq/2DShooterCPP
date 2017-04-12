@@ -25,7 +25,11 @@ OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT))
 
 
 #Defauilt Make
-all: $(TARGET)
+all: resources $(TARGET)
+
+
+resources : directories
+	@cp -r $(RESDIR) $(TARGETDIR)/
 
 #Make the Directories
 directories:

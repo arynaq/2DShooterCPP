@@ -33,6 +33,9 @@ void BaseSystem::removeEntity(Entity& entity){
     onEntityRemoved(entity);
 }
 
+/**
+ * The entities of the system are set by world.refresh
+ * **/
 const std::vector<Entity>& BaseSystem::getEntities() const{
     return m_entities;
 }

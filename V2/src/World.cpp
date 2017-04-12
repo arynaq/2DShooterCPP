@@ -8,6 +8,11 @@ World::World(std::size_t entityPoolSize) :
 {
 }
 
+World::World() :
+    World(MAX_ENTITY)
+{
+}
+
 
 
 

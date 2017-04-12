@@ -4,22 +4,17 @@
 #include <SFML/Window/Keyboard.hpp>
 
 struct PlayerComponent : Component {
-
+    using Key = sf::Keyboard::Key;
     float startSpeed;
-
     enum class PlayerState {
-        DEFAULT = 0,
+        IDLE = 0,
         LEFT_MOVING,
         RIGHT_MOVING,
         DOWN_MOVING,
-        UP_MOVING,
-        IDLE
+        UP_MOVING
     } state;
-
-    struct Controls {
-        using Key = sf::Keyboard::Key;
-        Controls() : left(Key::A), right(Key::D), up(Key::W), down(Key::S){
-        }
-        Key left, right, up, down;
-    } controls;
+    const Key left = Key::A;
+    const Key right = Key::D;
+    const Key up = Key::W;
+    const Key down = Key::S;
 };
