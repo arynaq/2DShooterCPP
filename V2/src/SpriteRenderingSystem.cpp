@@ -14,9 +14,9 @@ sf::RenderTarget& SpriteRenderingSystem::getRenderTarget() const {
 void SpriteRenderingSystem::render(){
     auto& entities = getEntities();
     for(auto& entity : entities){
-        auto& sprite = entity.getComponent<SpriteComponent>().sprite;
+        auto& sprite = entity.getComponent<SpriteComponent>().texture.sprite;
         auto& transform = entity.getComponent<TransformComponent>().transform;
-        getRenderTarget().draw(sprite,transform.getTransform());
+        getRenderTarget().draw(*sprite,transform.getTransform());
     }
 }
 

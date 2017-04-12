@@ -13,7 +13,7 @@ void PacmanGame::init(){
     m_world.addSystem(m_inputSystem);
     m_player = m_world.createEntity();
 
-    auto& playerSprite = m_player.addComponent<SpriteComponent>().sprite;
+    m_player.addComponent<SpriteComponent>().texture.id = "player";
 }
 
 void PacmanGame::render(){

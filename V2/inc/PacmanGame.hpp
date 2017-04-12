@@ -4,7 +4,7 @@
 #include "World.hpp"
 #include "InputSystem.hpp"
 #include "SpriteRenderingSystem.hpp"
-
+#include "TextureCacheSystem.hpp"
 
 
 class PacmanGame {
