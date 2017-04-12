@@ -5,6 +5,7 @@ INCDIR := inc
 BUILDDIR := obj
 TARGET := pacman
 TARGETDIR := bin
+RESDIR := res
 SRCEXT := cpp
 OBJEXT := o
 
