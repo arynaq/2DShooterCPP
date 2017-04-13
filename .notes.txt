@@ -1,0 +1,14 @@
+#Events
+
+    - Need a way to send information across the different systems when a component changes a value
+    - This information should be sent to all concerned systems (eg InputSystem only listens for mesages that concern PlayerComponent)
+    - Signals are one way of doing this...
+
+    Eg a VelocityComponent has 
+
+        template <typename T>
+        struct VelocityComponent : Component {  
+            
+                ....
+                signal <void(const T&)> 
+        }
