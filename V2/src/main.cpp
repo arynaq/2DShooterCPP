@@ -33,8 +33,14 @@ struct Event : BaseEvent {
     }
 };
 
+
+/**
+ * CRTP to make sure only one connection map exist per subclass
+ *
+ * Keep a list of the connections that are made, check against this when trying to disconnect a signal/slot
+ * **/
 template <typename Derived>
-struct Subscriber{
+struct Receiver{
 private:
     friend class EventManager;
     boost::ptr_map<TypeID, boost::signals2::connection> connections;
@@ -56,6 +62,7 @@ struct EventManager {
     template <typename E, typename Subscriber>
     void subscribe(Subscriber& subscriber){
         /** Cannot use auto for the callback, as overloaded functions will fudge up... **/
+        static_assert(std::is_base_of<Receiver<Subscriber>, Subscriber>::value, "Subscriber must derive from receiver!..");
         void (Subscriber::*callback)(const E&) = &Subscriber::receive;
         auto callbackWrapper = CallbackWrapper<E>(boost::bind(callback, &subscriber, _1));
         TypeID id = Event<E>::getID();  
@@ -101,7 +108,7 @@ struct IntEvent {
     int value = 11;
 };
 
-struct Test : Subscriber<Test>{
+struct Test : Receiver<Test>{
     void receive(const IntEvent& e){
         std::cout<<"Received event with value: " <<e.value<<std::endl;
     }
@@ -135,45 +142,3 @@ int main(){
 }
 
 
-/** Ideas:
- *  Create a publisher / subscriber system for the game
- *
- *  a) Can use filtering to match a system (subscriber) to a message (Filter & std::forward with vargs)
- *  b) Can let a system also be a publisher
- *  c) On a message generation -> Pass to mediator (world)
- *  d) World is responsible in refresh for sending messges to correct system
- *  e) What is a message then? A struct with a datafield where entity is referenced and a copy of the 
- *  f) data to be changed is.
- *  
- *  Eg: auto& someEntity = ....
- *      auto& Message = getWorld().createEntity();
- *      Message.addComponent<VelocityComponent>().velocity = {2,2};
- *      Message.addComponent<EntityMessageComponent>().entity = someEntity;
- *      Message.activate();
- *      getWorld().MessageHandler.refresh() --> sends messages to correct systems
- *      then in world.refresh()
- *      messageHandler.refresh() -> Which simply adds a message to the correct system
- *      
- *           -- implicit that requires EntityMessageComponent -- 
- *      struct VelocityMessageHandler : MessageHandler<Requires<VelocityComponent>>
- *      or struct VelocityMessageHandler : MessageHandler<VelocityComponent>
- *
- *
- *      and in that handlers update:
- *              void update(){
- *                  getEntities();
- *              }
- *
- *
- *   
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *  **/
