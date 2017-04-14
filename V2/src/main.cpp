@@ -4,42 +4,95 @@
 #include "World.hpp"
 #include "InputSystem.hpp"
 #include <string>
-
 #include <boost/signals2/signal.hpp>
+#include <boost/ptr_container/ptr_map.hpp>
+#include <boost/function.hpp>
 
-struct B {
-    void operator()() const {
-        std::cout<<"Hello from B!"<<std::endl;
+
+
+struct ComponentChanged{
+    ComponentChanged(Component c, Entity e) : changedComponent(c), entity(e) {}
+    Component changedComponent;
+    Entity entity;
+    int value = 332124;
+};
+
+
+struct BaseEvent {
+    protected:
+        static TypeID m_nextTypeID;
+};
+
+TypeID BaseEvent::m_nextTypeID = 0;
+
+template <typename TSubEvent>
+struct Event : BaseEvent {
+    static TypeID  getID(){
+        static const TypeID id = m_nextTypeID++;
+        return id;
+    }
+};
+
+
+struct EventManager {
+    using Signal = boost::signals2::signal<void(void*)>;
+    using SignalMap = boost::ptr_map<TypeID, Signal>;
+
+    SignalMap map;
+
+    /** Add the receive function of the subscriber 
+     * as a slot to the signal map of the given Event type
+     *
+     * So that whenever emit<E> is called all previously slots
+     * connected to E here will be called.
+     * */
+    template <typename E, typename Subscriber>
+    void subscribe(Subscriber& subscriber){
+        auto callback = &Subscriber::receive;
+        auto callbackWrapper = CallbackWrapper<E>(boost::bind(callback, &subscriber, _1));
+        TypeID id = Event<E>::getID();  
+        map[id].connect(callbackWrapper);
     }
 
-    void operator()(const std::string& s) const {
-        std::cout<<"B was passed: " << s<<std::endl;
+    template <typename E, typename Subscriber>
+    void unsubscribe(Subscriber& subscriber){
+        auto callback = &Subscriber::receive;
+    }
+
+
+    /** Since we can only store 
+    template <typename E>
+    struct CallbackWrapper {
+        explicit CallbackWrapper(boost::function<void(const E&)> callback) :callback(callback)
+        {
+        }
+        void operator()(const void* event){
+            callback(*(static_cast<const E*>(event)));
+        }
+        boost::function<void(const E&)> callback;
+    };
+};
+
+struct IntEvent {
+    int value = 1;
+};
+
+struct Test {
+    void receive(const IntEvent& e){
+        std::cout<<"Received event with value: " <<e.value<<std::endl;
     }
 };
 
 
-template <typename TDerived, typename ValueType>
-struct Base {
-    boost::signals2::signal<void(const ValueType&)> signal;
-};
 
-
-template <typename T>
-struct Derived : Base<Derived<T>, T>{
-    using value_type = T;
-    value_type value;
-    Derived(value_type&& rvalue) : value(std::move(rvalue)){}
-};
 
 
 
 int main(){
     InputSystem s;
-    B b1;
-
-    Derived<std::string> d(std::string("Hello"));
-    d.signal.connect(b1);
-    d.signal("Foo!");
+    EventManager m;
+    Test test;
+    m.connect<IntEvent, Test>(test);
     return 0;
 }
 
