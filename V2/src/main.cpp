@@ -34,11 +34,12 @@ struct Event : BaseEvent {
 };
 
 
+
+
 struct EventManager {
-    using Signal = boost::signals2::signal<void(void*)>;
+    using Signal = boost::signals2::signal<void(const void*)>;
     using SignalMap = boost::ptr_map<TypeID, Signal>;
 
-    SignalMap map;
 
     /** Add the receive function of the subscriber 
      * as a slot to the signal map of the given Event type
@@ -48,19 +49,29 @@ struct EventManager {
      * */
     template <typename E, typename Subscriber>
     void subscribe(Subscriber& subscriber){
-        auto callback = &Subscriber::receive;
+        /** Cannot use auto for the callback, as overloaded functions will fudge up... **/
+        void (Subscriber::*callback)(const E&) = &Subscriber::receive;
         auto callbackWrapper = CallbackWrapper<E>(boost::bind(callback, &subscriber, _1));
         TypeID id = Event<E>::getID();  
-        map[id].connect(callbackWrapper);
+        auto connection = map[id].connect(callbackWrapper);
     }
 
     template <typename E, typename Subscriber>
     void unsubscribe(Subscriber& subscriber){
-        auto callback = &Subscriber::receive;
     }
 
 
-    /** Since we can only store 
+    template <typename E>
+    void emit(const E& event){
+        auto id = Event<E>::getID();
+        map[id](&event);
+    }
+
+
+    /** Since we can only store functions of void return type and const void* input 
+     *  we need to wrap void (const E&) inside a functor
+     *  and cast back on operator()
+     *  */
     template <typename E>
     struct CallbackWrapper {
         explicit CallbackWrapper(boost::function<void(const E&)> callback) :callback(callback)
@@ -71,15 +82,21 @@ struct EventManager {
         }
         boost::function<void(const E&)> callback;
     };
+
+    private:
+        SignalMap map;
 };
 
 struct IntEvent {
-    int value = 1;
+    int value = 11;
 };
 
 struct Test {
     void receive(const IntEvent& e){
         std::cout<<"Received event with value: " <<e.value<<std::endl;
+    }
+    void receive(const std::string& s){
+        std::cout<<"Received event with string value: " << s << std::endl;
     }
 };
 
@@ -92,7 +109,14 @@ int main(){
     InputSystem s;
     EventManager m;
     Test test;
-    m.connect<IntEvent, Test>(test);
+    m.subscribe<IntEvent>(test);
+    m.subscribe<std::string>(test);
+
+    const IntEvent i;
+    const std::string h("Hello World!");
+    m.emit(i);
+    m.emit(h);
+
     return 0;
 }
 
