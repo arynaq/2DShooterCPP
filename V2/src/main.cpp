@@ -33,6 +33,12 @@ struct Event : BaseEvent {
     }
 };
 
+template <typename Derived>
+struct Subscriber{
+private:
+    friend class EventManager;
+    boost::ptr_map<TypeID, boost::signals2::connection> connections;
+};
 
 
 
@@ -54,10 +60,14 @@ struct EventManager {
         auto callbackWrapper = CallbackWrapper<E>(boost::bind(callback, &subscriber, _1));
         TypeID id = Event<E>::getID();  
         auto connection = map[id].connect(callbackWrapper);
+        subscriber.connections[id]= connection;
     }
 
     template <typename E, typename Subscriber>
     void unsubscribe(Subscriber& subscriber){
+        TypeID id = Event<E>::getID();
+        auto& connection = subscriber.connections[id];
+        connection.disconnect();
     }
 
 
@@ -91,7 +101,7 @@ struct IntEvent {
     int value = 11;
 };
 
-struct Test {
+struct Test : Subscriber<Test>{
     void receive(const IntEvent& e){
         std::cout<<"Received event with value: " <<e.value<<std::endl;
     }
@@ -116,6 +126,10 @@ int main(){
     const std::string h("Hello World!");
     m.emit(i);
     m.emit(h);
+
+    m.unsubscribe<std::string>(test);
+    m.emit(h);
+    m.emit(i);
 
     return 0;
 }
