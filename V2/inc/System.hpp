@@ -10,6 +10,7 @@ class System : public BaseSystem {
         System() : BaseSystem(MakeFilter<RequireList, ExcludeList>())
         {
         }
+
 };
 
 /** As the other TypeIDs this ensures that we get a unique identifier per new

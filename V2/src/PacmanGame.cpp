@@ -21,9 +21,12 @@ void PacmanGame::render(){
 }
 
 void PacmanGame::update(float dt){
+    m_world.refresh();
+    m_inputSystem.update();
+    m_textureCache.update();
 }
 
-void PacmanGame::handleEvent(sf::Event event){
+void PacmanGame::handleEvent(sf::Event& event){
 }
 
 

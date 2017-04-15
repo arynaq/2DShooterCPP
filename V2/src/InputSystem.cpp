@@ -1,7 +1,7 @@
 #include "InputSystem.hpp"
 
 
-void InputSystem::update(float dt){
+void InputSystem::update(){
     auto entities = getEntities();
     for(auto& entity : entities){
         auto& player = entity.getComponent<PlayerComponent>();

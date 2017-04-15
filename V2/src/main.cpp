@@ -4,15 +4,15 @@
 #include "World.hpp"
 #include "InputSystem.hpp"
 #include "MessageHandler.hpp"
-
-
-
-
+#include "GameLoader.hpp"
 
 
 int main(){
-    InputSystem s;
-    MessageHandler m;
+    sf::RenderWindow window(sf::VideoMode(800,600), "Pacman");
+    PacmanGame game(window);
+    GameLoader loader(game, window);
+    game.init();
+    //loader.run();
     return 0;
 }
 

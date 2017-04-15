@@ -5,5 +5,6 @@
 
 struct InputSystem : System<Requires<PlayerComponent, VelocityComponent>> {
     public:
-        void update(float dt);
+        void update();
+        ~InputSystem(){}
 };

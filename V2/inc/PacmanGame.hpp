@@ -11,15 +11,16 @@ class PacmanGame {
     public:
         PacmanGame(sf::RenderTarget& renderer);
         void init();
-        void update(float dt);
-        void render();
-        void handleEvent(sf::Event event);
         bool isRunning() const {
             return m_running;
         }
         void quit(){
             m_running = false;
         }
+
+        void update(float dt);
+        void render();
+        void handleEvent(sf::Event& event);
 
     private:
         bool m_running;
@@ -33,6 +34,8 @@ class PacmanGame {
         TextureCacheSystem m_textureCache;
 
         void loadTextures();
+
+
 };
 
 

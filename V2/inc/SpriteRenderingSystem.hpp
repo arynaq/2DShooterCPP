@@ -10,6 +10,7 @@
 struct SpriteRenderingSystem : System<Requires<SpriteComponent, TransformComponent>> {
     public:
         SpriteRenderingSystem(sf::RenderTarget& renderTarget);
+        ~SpriteRenderingSystem(){}
         void render();
         sf::RenderTarget& getRenderTarget() const;
         bool isValid() const;
