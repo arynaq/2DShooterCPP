@@ -10,6 +10,7 @@ BaseSystem::BaseSystem(const Filter& filter) :
 
 BaseSystem::~BaseSystem(){}
 
+
 const Filter& BaseSystem::getFilter() const {
     return m_filter;
 }

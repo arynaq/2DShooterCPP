@@ -11,6 +11,8 @@ class System : public BaseSystem {
         {
         }
 
+        ~System() {}
+
 };
 
 /** As the other TypeIDs this ensures that we get a unique identifier per new

@@ -26,3 +26,4 @@ class BaseSystem {
         std::vector<Entity> m_entities;
         friend class World;
 };
+
