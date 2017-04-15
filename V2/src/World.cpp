@@ -5,6 +5,7 @@
 World::World(std::size_t entityPoolSize) :
     m_entityIDPool(entityPoolSize),
     m_entityAttributes(entityPoolSize)
+
 {
 }
 
@@ -111,4 +112,8 @@ void World::addSystem(BaseSystem& system, TypeID systemTypeID){
     m_systems[systemTypeID].reset(&system);
     system.m_world = this;
     system.initialize();
+}
+
+MessageHandler& World::getMessageHandler(){
+    return messageHandler;
 }

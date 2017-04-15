@@ -6,6 +6,7 @@
 #include "System.hpp"
 #include <memory>
 #include <unordered_map>
+#include "MessageHandler.hpp"
 
 class World {
     public:
@@ -64,11 +65,15 @@ class World {
         void addSystem(TSystem& system);
 
 
+        MessageHandler& getMessageHandler();
+
+
 
     private:
         friend class Entity;
         EntityIDPool m_entityIDPool;
         SystemArray m_systems;
+        MessageHandler messageHandler;
 
 
         struct EntityAttributes {
