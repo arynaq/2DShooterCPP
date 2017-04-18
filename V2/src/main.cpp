@@ -12,7 +12,7 @@ int main(){
     PacmanGame game(window);
     GameLoader loader(game, window);
     game.init();
-    //loader.run();
+    loader.run();
     return 0;
 }
 

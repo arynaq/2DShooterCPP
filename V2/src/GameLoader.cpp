@@ -1,7 +1,5 @@
 #include "GameLoader.hpp"
 #include <SFML/System/Clock.hpp>
-#include <iostream>
-
 
 GameLoader::GameLoader(PacmanGame& game, sf::Window& window):
     window(&window),
@@ -17,6 +15,8 @@ void GameLoader::run(){
             sf::Event event;
             while(window->pollEvent(event)){
                 game->handleEvent(event);
+                game->update(1);
+                game->render();
             }
         }
     }

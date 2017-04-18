@@ -61,8 +61,8 @@ class World {
         void refresh();
 
 
-        template <typename TSystem>
-        void addSystem(TSystem& system);
+        template <typename T, typename... Args>
+        T& addSystem(Args&&... args);
 
 
         MessageHandler& getMessageHandler();
@@ -120,13 +120,14 @@ class World {
             }
         } m_cache;
 
-        /** Helper method for adding a system of the given type **/
-        void addSystem(BaseSystem& system, TypeID systemTypeId);
+        void addSystem(BaseSystem* system, TypeID systemTypeId);
 };
 
 
-template <typename TSystem>
-void World::addSystem(TSystem& system){
-    static_assert(std::is_base_of<BaseSystem,TSystem>(), "System is not derived from BaseSystem..");
-    addSystem(system, SystemTypeId<TSystem>());
+template <typename T, typename... Args>
+T& World::addSystem(Args&&...args){
+    auto* system = new T(std::forward<Args>(args)...);
+    addSystem(system, SystemTypeId<T>());
+    return *system;
 }
+

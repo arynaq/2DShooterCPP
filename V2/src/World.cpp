@@ -106,12 +106,11 @@ void World::refresh(){
     m_cache.clearTemporaries();
 }
 
-void World::addSystem(BaseSystem& system, TypeID systemTypeID){
-    assert(!system.m_world && "System already has a world...");
-    /** Replace whatever system was already there with this ... **/
-    m_systems[systemTypeID] = std::unique_ptr<BaseSystem>(&system);
-    system.m_world = this;
-    system.initialize();
+void World::addSystem(BaseSystem* system, TypeID systemTypeID){
+    assert(!system->m_world && "System already has a world...");
+    m_systems[systemTypeID].reset(system);
+    system->m_world = this;
+    system->initialize();
 }
 
 MessageHandler& World::getMessageHandler(){
