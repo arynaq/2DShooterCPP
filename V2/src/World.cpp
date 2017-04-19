@@ -114,6 +114,7 @@ void World::addSystem(BaseSystem* system, TypeID systemTypeID){
     system->initialize();
 }
 
-MessageHandler& World::getMessageHandler(){
-    return messageHandler;
+MessageHandler& World::messageHandler(){
+    return m_messageHandler;
 }
+

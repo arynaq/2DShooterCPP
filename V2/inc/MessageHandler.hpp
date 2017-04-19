@@ -41,7 +41,7 @@ public:
 template <typename Derived>
 class Receiver{
 private:
-    friend class EventManager;
+    friend class MessageHandler;
     boost::ptr_map<TypeID, boost::signals2::connection> connections;
 };
 

@@ -6,8 +6,8 @@
 #include "System.hpp"
 #include <memory>
 #include <unordered_map>
-#include "MessageHandler.hpp"
 #include <iostream>
+#include "MessageHandler.hpp"
 
 class World {
     public:
@@ -66,16 +66,13 @@ class World {
         T& addSystem(Args&&... args);
 
 
-        MessageHandler& getMessageHandler();
-
-
+        MessageHandler& messageHandler();
 
     private:
         friend class Entity;
         EntityIDPool m_entityIDPool;
         SystemArray m_systems;
-        MessageHandler messageHandler;
-
+        MessageHandler m_messageHandler;
 
         struct EntityAttributes {
             struct Attribute {

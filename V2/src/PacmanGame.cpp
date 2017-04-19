@@ -1,6 +1,4 @@
 #include "PacmanGame.hpp"
-#include <iostream>
-#include "Clock.hpp"
 
 
 PacmanGame::PacmanGame(sf::RenderTarget& renderer):
@@ -17,14 +15,17 @@ void PacmanGame::init(){
     m_player = m_world.createEntity();
     m_player.addComponent<SpriteComponent>().data.id = "player";
     m_player.addComponent<TransformComponent>().transform.setPosition(0,0);
-    m_player.addComponent<PlayerComponent>().startSpeed = 1;
+    m_player.addComponent<PlayerComponent>().startSpeed = 70;
     m_player.addComponent<VelocityComponent>();
     m_player.activate();
+
+   // m_world.messageHandler().subscribe<std::string>(m_inputSystem);
+   // m_world.messageHandler().subscribe<std::string>(m_spriteRenderingSystem);
     loadTextures();
 }
 
 void PacmanGame::render(){
-    m_renderTarget->clear(sf::Color(100,100,100));
+    m_renderTarget->clear(sf::Color(0,117,51));
     m_spriteRenderingSystem.render();
 }
 

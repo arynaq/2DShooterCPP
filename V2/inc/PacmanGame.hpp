@@ -6,6 +6,7 @@
 #include "SpriteRenderingSystem.hpp"
 #include "TextureCacheSystem.hpp"
 #include "MovementSystem.hpp"
+#include "MessageHandler.hpp"
 
 
 class PacmanGame {
@@ -30,6 +31,7 @@ class PacmanGame {
         sf::RenderTarget* m_renderTarget;
         World m_world;
         Entity m_player;
+        MessageHandler m_messageHandler;
 
         /** Systems **/
         SpriteRenderingSystem& m_spriteRenderingSystem;

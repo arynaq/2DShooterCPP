@@ -17,7 +17,7 @@ const Filter& BaseSystem::getFilter() const {
 
 World& BaseSystem::getWorld() const {
     assert(m_world && "World is null...");
-    return  *m_world;
+    return *m_world;
 }
 
 /** 
