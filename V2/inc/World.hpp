@@ -65,6 +65,8 @@ class World {
         template <typename T, typename... Args>
         T& addSystem(Args&&... args);
 
+        template <class RequireList, class ExcludeList = Excludes<>>
+        EntityArray getEntities();
 
         MessageHandler& messageHandler();
 
@@ -119,6 +121,7 @@ class World {
         } m_cache;
 
         void addSystem(BaseSystem* system, TypeID systemTypeId);
+        EntityArray getEntities(Filter& filter);
 };
 
 
@@ -127,5 +130,11 @@ T& World::addSystem(Args&&...args){
     auto* system = new T(std::forward<Args>(args)...);
     addSystem(system, SystemTypeId<T>());
     return static_cast<T&>(*m_systems[SystemTypeId<T>()].get());
+}
+
+template <class RequireList, class ExcludeList = Excludes<>>
+World::EntityArray World::getEntities(){
+    Filter f = MakeFilter<RequireList,ExcludeList>();
+    return getEntities(f);
 }
 

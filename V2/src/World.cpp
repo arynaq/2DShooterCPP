@@ -58,7 +58,6 @@ void World::refresh(){
              * add it to the system
              * **/
             if(system->getFilter().passFilter(componentTypeList)){
-                std::cout<<"Matches filter..."<<std::endl;
                 /** If the entity is being matched against the system for the first time **/
                 if(attribute.systems.size() <= sysindex || !attribute.systems[sysindex]){
                     system->addEntity(entity);
@@ -116,5 +115,16 @@ void World::addSystem(BaseSystem* system, TypeID systemTypeID){
 
 MessageHandler& World::messageHandler(){
     return m_messageHandler;
+}
+
+World::EntityArray World::getEntities(Filter& filter){
+    World::EntityArray entities;
+    for(auto& entity : m_cache.alive){
+        auto componentTypeList = m_entityAttributes.componentStorage.getComponentTypeList(entity);
+        if(filter.passFilter(componentTypeList)){
+            entities.push_back(entity);
+        }
+    }
+    return entities;
 }
 
