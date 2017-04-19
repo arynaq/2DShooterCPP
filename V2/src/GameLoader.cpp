@@ -1,5 +1,5 @@
 #include "GameLoader.hpp"
-#include <SFML/System/Clock.hpp>
+#include "Clock.hpp"
 
 GameLoader::GameLoader(PacmanGame& game, sf::Window& window):
     window(&window),
@@ -9,15 +9,32 @@ GameLoader::GameLoader(PacmanGame& game, sf::Window& window):
 
 
 void GameLoader::run(){
-    sf::Clock clock;
+    using Second = double;
+    using WallClock = Clock<Second>;
+    using Event = sf::Event;
+
+
+    Event event;
+    Second start = WallClock::now();
+    Second total = 0;
+    Second framedt = game->frame_dt;
+
     while(game->isRunning()){
-        while(window->isOpen()){
-            sf::Event event;
-            while(window->pollEvent(event)){
-                game->handleEvent(event);
-                game->update(1);
-                game->render();
-            }
+        while(window->pollEvent(event)){
+            game->handleEvent(event);
         }
+
+        Second now = WallClock::now();
+        Second delta = now - start;
+        total += delta;
+
+        while(total >= framedt) {
+            total -= framedt;
+            game->update(framedt);
+        }
+
+        game->render();
+        window->display();
+        start = now;
     }
 }

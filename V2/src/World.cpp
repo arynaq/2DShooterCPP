@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include <cassert>
 #include <algorithm>
+#include <iostream>
 
 World::World(std::size_t entityPoolSize) :
     m_entityIDPool(entityPoolSize),
@@ -50,7 +51,6 @@ void World::refresh(){
         attribute.activated = true;
         /** Get the bitset of components this entity has **/
         auto componentTypeList = m_entityAttributes.componentStorage.getComponentTypeList(entity);
-
         for(auto& keyvalue : m_systems){
             auto sysindex = keyvalue.first;
             auto& system = keyvalue.second;
@@ -58,6 +58,7 @@ void World::refresh(){
              * add it to the system
              * **/
             if(system->getFilter().passFilter(componentTypeList)){
+                std::cout<<"Matches filter..."<<std::endl;
                 /** If the entity is being matched against the system for the first time **/
                 if(attribute.systems.size() <= sysindex || !attribute.systems[sysindex]){
                     system->addEntity(entity);

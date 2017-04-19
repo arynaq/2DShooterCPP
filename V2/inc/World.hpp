@@ -7,6 +7,7 @@
 #include <memory>
 #include <unordered_map>
 #include "MessageHandler.hpp"
+#include <iostream>
 
 class World {
     public:
@@ -128,6 +129,6 @@ template <typename T, typename... Args>
 T& World::addSystem(Args&&...args){
     auto* system = new T(std::forward<Args>(args)...);
     addSystem(system, SystemTypeId<T>());
-    return *system;
+    return static_cast<T&>(*m_systems[SystemTypeId<T>()].get());
 }
 

@@ -8,6 +8,8 @@ class GameLoader {
     public:
         GameLoader(PacmanGame& game, sf::Window& window);
         void run();
+
+
     private:
         sf::Window* window;
         PacmanGame* game;

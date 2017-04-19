@@ -5,6 +5,7 @@
 #include "InputSystem.hpp"
 #include "MessageHandler.hpp"
 #include "GameLoader.hpp"
+#include "Filter.hpp"
 
 
 int main(){
@@ -12,6 +13,7 @@ int main(){
     PacmanGame game(window);
     GameLoader loader(game, window);
     game.init();
+
     loader.run();
     return 0;
 }

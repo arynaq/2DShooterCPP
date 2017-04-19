@@ -5,6 +5,7 @@
 #include "InputSystem.hpp"
 #include "SpriteRenderingSystem.hpp"
 #include "TextureCacheSystem.hpp"
+#include "MovementSystem.hpp"
 
 
 class PacmanGame {
@@ -21,6 +22,8 @@ class PacmanGame {
         void update(float dt);
         void render();
         void handleEvent(sf::Event& event);
+    
+        const double frame_dt = 1.0/30;
 
     private:
         bool m_running;
@@ -29,10 +32,10 @@ class PacmanGame {
         Entity m_player;
 
         /** Systems **/
-        SpriteRenderingSystem m_spriteRenderingSystem;
-        InputSystem m_inputSystem;
-        TextureCacheSystem m_textureCache;
-
+        SpriteRenderingSystem& m_spriteRenderingSystem;
+        InputSystem& m_inputSystem;
+        TextureCacheSystem& m_textureCache;
+        MovementSystem& m_movementSystem;
         void loadTextures();
 
 

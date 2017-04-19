@@ -5,8 +5,8 @@
 
 
 struct SpriteComponent : Component {
-    struct Texture {
-        sf::Sprite* sprite;
+    struct data{
+        sf::Sprite sprite;
         std::string id;
-    } texture;
+    } data;
 };

@@ -24,7 +24,7 @@ struct Filter {
 
         bool passFilter(const ComponentTypeList& typeList) const;
 
-    private:
+   // private:
         ComponentTypeList m_requires;
         ComponentTypeList m_excludes;
 };
