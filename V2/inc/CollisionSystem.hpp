@@ -2,4 +2,6 @@
 
 #include "System.hpp"
 
-struct CollionSystem : System<Requires<CollisionComponent
+struct CollionSystem : System<Requires<CollisionComponent>> {
+    void update(double dt);
+};

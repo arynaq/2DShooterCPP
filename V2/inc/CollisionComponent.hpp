@@ -3,8 +3,5 @@
 #include "Component.hpp"
 
 struct CollisionComponent : Component {
-    struct Data {
-        bool doesCollide = false;
-        sf::FloatRect collisionBox;
-    } data;
+    sf::FloatRect collisionBox;
 };

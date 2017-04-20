@@ -23,7 +23,6 @@ const Entity::ID& Entity::getID() const {
 }
 
 void Entity::addComponent(Component* component, TypeID componentTypeID){
-    std::cout<<"Adding component with typeid: " << componentTypeID << std::endl;
     getWorld().m_entityAttributes.componentStorage.addComponent(*this, component, componentTypeID);
 }
 
@@ -48,7 +47,6 @@ bool Entity::operator==(const Entity& entity) const {
 }
 
 void Entity::activate(){
-    std::cout<<"Inside Entity class, activating entity " << m_id.index << std::endl;
     getWorld().activateEntity(*this);
 }
 

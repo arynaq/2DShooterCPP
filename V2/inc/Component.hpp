@@ -5,7 +5,7 @@
 #include "ClassTypeId.hpp"
 
 
-#define MAX_COMPONENTS 1000
+#define MAX_COMPONENTS 100
 
 
 

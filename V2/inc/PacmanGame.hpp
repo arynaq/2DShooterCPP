@@ -4,6 +4,7 @@
 #include "World.hpp"
 #include "InputSystem.hpp"
 #include "SpriteRenderingSystem.hpp"
+#include "TileRenderingSystem.hpp"
 #include "TextureCacheSystem.hpp"
 #include "MovementSystem.hpp"
 #include "MessageHandler.hpp"
@@ -38,6 +39,7 @@ class PacmanGame {
         InputSystem& m_inputSystem;
         TextureCacheSystem& m_textureCache;
         MovementSystem& m_movementSystem;
+        TileRenderingSystem& m_tileRenderingSystem;
         void loadTextures();
 
 

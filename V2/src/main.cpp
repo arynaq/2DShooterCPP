@@ -9,11 +9,10 @@
 
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode(800,600), "Pacman");
+    sf::RenderWindow window(sf::VideoMode(1024,1024), "Pacman");
     PacmanGame game(window);
     GameLoader loader(game, window);
     game.init();
-
     loader.run();
     return 0;
 }

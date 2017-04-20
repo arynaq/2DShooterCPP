@@ -3,7 +3,7 @@
 #include "Component.hpp"
 
 #define ENTITY_COUNTER_BITS 16
-#define MAX_ENTITY 1000
+#define MAX_ENTITY 2000
 
 class World;
 class Entity {
