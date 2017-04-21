@@ -17,3 +17,6 @@
 !/res/*/**
 !*.txt
 !.Xresources
+!*.png
+!*.ttf
+!*.in
