@@ -1,7 +1,8 @@
 #pragma once
 
 #include "System.hpp"
+#include "Components.hpp"
 
-struct CollionSystem : System<Requires<CollisionComponent>> {
+struct CollisionSystem : System<Requires<CollisionComponent, TransformComponent>> {
     void update(double dt);
 };

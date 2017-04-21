@@ -10,4 +10,10 @@ void MovementSystem::update(double dt){
 
         transform.move(velocity*(float)dt);
     }
+
+
+}
+
+void MovementSystem::receive(const CollisionEvent& event){
+    std::cout<<"Received collisionevent.."<<std::endl;
 }

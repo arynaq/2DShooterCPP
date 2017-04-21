@@ -1,12 +1,8 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "Systems.hpp"
 #include "World.hpp"
-#include "InputSystem.hpp"
-#include "SpriteRenderingSystem.hpp"
-#include "TileRenderingSystem.hpp"
-#include "TextureCacheSystem.hpp"
-#include "MovementSystem.hpp"
 #include "MessageHandler.hpp"
 
 
@@ -40,6 +36,8 @@ class PacmanGame {
         TextureCacheSystem& m_textureCache;
         MovementSystem& m_movementSystem;
         TileRenderingSystem& m_tileRenderingSystem;
+        CollisionSystem& m_collisionSystem;
+        DebugSystem& m_debugSystem;
         void loadTextures();
 
 

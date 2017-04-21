@@ -4,6 +4,7 @@
 #include <boost/ptr_container/ptr_map.hpp>
 #include <boost/function.hpp>
 #include "ClassTypeId.hpp"
+#include <iostream>
 
 
 /**
@@ -78,10 +79,20 @@ public:
     }
 
 
+    /** Pass an already contructed event **/
     template <typename E>
     void emit(const E& event){
         auto id = Event<E>::getID();
         map[id](&event);
+    }
+
+
+    /** Allow for passing constructor paramters of eventtype E **/
+    template <typename E, typename... Args>
+    void emit(Args&&... args){
+        E e = E(std::forward<Args>(args)...);
+        const E& er = e;
+        emit<E>(er);
     }
 
 

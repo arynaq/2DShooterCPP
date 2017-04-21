@@ -1,9 +1,10 @@
 #pragma once
 #include "System.hpp"
 #include "TileComponent.hpp"
+#include "TransformComponent.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-struct TileRenderingSystem : System<Requires<TileComponent>>{
+struct TileRenderingSystem : System<Requires<TileComponent, TransformComponent>>{
     TileRenderingSystem(sf::RenderTarget& renderTarget);
     ~TileRenderingSystem(){}
 

@@ -17,8 +17,8 @@ sf::RenderTarget& TileRenderingSystem::getRenderTarget() const {
 void TileRenderingSystem::render(){
     auto& entities = getEntities();
     for(auto& entity : entities){
-        auto& tileComponent = entity.getComponent<TileComponent>();
-        auto& shape = tileComponent.shape;
-        getRenderTarget().draw(shape);
+        auto& shape = entity.getComponent<TileComponent>().shape;
+        auto& transform= entity.getComponent<TransformComponent>().transform;
+        getRenderTarget().draw(shape, transform.getTransform());
     }
 }
