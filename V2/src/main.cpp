@@ -3,9 +3,10 @@
 #include "System.hpp"
 #include "World.hpp"
 #include "InputSystem.hpp"
-#include "MessageHandler.hpp"
 #include "GameLoader.hpp"
+#include "MessageHandler.hpp"
 #include "Filter.hpp"
+#include "config.h"
 
 
 int main(){

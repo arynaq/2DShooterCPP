@@ -1,0 +1,7 @@
+C:/Workspace/2DShooterCPP/V2/build/CMakeFiles/edit_cache.dir
+C:/Workspace/2DShooterCPP/V2/build/CMakeFiles/pacman.dir
+C:/Workspace/2DShooterCPP/V2/build/CMakeFiles/install.dir
+C:/Workspace/2DShooterCPP/V2/build/CMakeFiles/rebuild_cache.dir
+C:/Workspace/2DShooterCPP/V2/build/CMakeFiles/list_install_components.dir
+C:/Workspace/2DShooterCPP/V2/build/CMakeFiles/install/strip.dir
+C:/Workspace/2DShooterCPP/V2/build/CMakeFiles/install/local.dir

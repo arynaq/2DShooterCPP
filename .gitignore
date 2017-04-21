@@ -12,6 +12,8 @@
 !Makefile
 !*.py
 !*.pacmap
-!*/res/*
-
+!/res/
+!/res/*
+!/res/*/**
+!*.txt
 !.Xresources
