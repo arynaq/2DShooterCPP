@@ -4,14 +4,27 @@
 #include <iostream>
 
 
-void CollisionSystem::update(double dt){
+
+
+void CollisionSystem::update(MapSystem& map, double dt){
     auto& entities = getEntities();
-    for(std::size_t i=0; i<entities.size(); ++i){
-        auto& entity = entities[i];
+    for(auto& entity : entities){
         auto& collisionBox = entity.getComponent<CollisionComponent>().collisionBox;
         auto& transform = entity.getComponent<TransformComponent>().transform;
         collisionBox.left = transform.getPosition().x;
         collisionBox.top  = transform.getPosition().y;
+        map.checkTileCollision(entity);
+    }
+    for(std::size_t i=0; i<entities.size(); ++i){
+        auto& left = entities[i];
+        auto& leftBox = left.getComponent<CollisionComponent>().collisionBox;
+        for(std::size_t j=i+1; j<entities.size(); ++j){
+            auto& right = entities[j];
+            auto& rightBox = right.getComponent<CollisionComponent>().collisionBox;
+            if(leftBox.intersects(rightBox)){
+                std::cout<<"Crash.."<<std::endl;
+            }
+        }
     }
 
     /**
@@ -28,7 +41,8 @@ void CollisionSystem::update(double dt){
         }
     }
     **/
-
 }
 
-
+void CollisionSystem::receive(const TileCollisionEvent& event){
+    std::cout<<"Received tile collision event..."<<std::endl;
+}

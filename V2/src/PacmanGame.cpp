@@ -11,7 +11,8 @@ PacmanGame::PacmanGame(sf::RenderTarget& renderer):
     m_movementSystem(m_world.addSystem<MovementSystem>()),
     m_tileRenderingSystem(m_world.addSystem<TileRenderingSystem>(renderer)),
     m_collisionSystem(m_world.addSystem<CollisionSystem>()),
-    m_debugSystem(m_world.addSystem<DebugSystem>(renderer))
+    m_debugSystem(m_world.addSystem<DebugSystem>(renderer)),
+    m_mapSystem(m_world.addSystem<MapSystem>())
 {
 }
 
@@ -22,67 +23,17 @@ void PacmanGame::init(){
     m_player.addComponent<TransformComponent>().transform.setPosition(32,32);
     m_player.addComponent<PlayerComponent>().startSpeed = 100;
     m_player.addComponent<VelocityComponent>();
-    m_player.addComponent<CollisionComponent>();
+    auto& collisionBox =  m_player.addComponent<CollisionComponent>().collisionBox;
+    collisionBox.width = 31;
+    collisionBox.height = 31;
     m_player.activate();
 
 
-    const int map[32][32] = {
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-    };
-    for(int i=0; i<32; ++i){
-        for(int j=0; j<32; ++j){
-            std::cout<<map[i][j]<<std::endl;
-            auto tile = m_world.createEntity();
-            auto& tileComponent = tile.addComponent<TileComponent>();
-            tile.addComponent<TransformComponent>().transform.setPosition(j*32, i*32);
-            if(map[i][j] == 1){
-                tileComponent.shape.setFillColor(sf::Color::Red);
-                auto& collisionComponent = tile.addComponent<CollisionComponent>();
-                collisionComponent.collisionBox.left = (j*32) + 1;
-                collisionComponent.collisionBox.top  = (i*32) + 1;
-                collisionComponent.collisionBox.width = 31;
-                collisionComponent.collisionBox.height = 31;
-            }
-            if(map[i][j] == 0)
-                tileComponent.shape.setFillColor(sf::Color::Black);
-            tile.activate();
-        }
-    }
 
    // m_world.messageHandler().subscribe<std::string>(m_inputSystem);
    // m_world.messageHandler().subscribe<std::string>(m_spriteRenderingSystem);
-    m_world.messageHandler().subscribe<CollisionEvent>(m_movementSystem);
+    m_world.messageHandler().subscribe<TileCollisionEvent>(m_collisionSystem);
+    m_world.messageHandler().subscribe<TileCollisionEvent>(m_tileRenderingSystem);
     loadTextures();
     m_running = true;
 }
@@ -91,7 +42,6 @@ void PacmanGame::render(){
     m_renderTarget->clear(sf::Color(0,117,51));
     m_tileRenderingSystem.render();
     m_spriteRenderingSystem.render();
-
     m_debugSystem.update(0);
 }
 
@@ -100,7 +50,7 @@ void PacmanGame::update(float dt){
     m_inputSystem.update();
     m_movementSystem.update(dt);
     m_textureCache.update();
-    m_collisionSystem.update(dt);
+    m_collisionSystem.update(m_mapSystem,dt);
 }
 
 void PacmanGame::handleEvent(sf::Event& event){

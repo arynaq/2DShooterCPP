@@ -18,7 +18,10 @@ void TileRenderingSystem::render(){
     auto& entities = getEntities();
     for(auto& entity : entities){
         auto& shape = entity.getComponent<TileComponent>().shape;
-        auto& transform= entity.getComponent<TransformComponent>().transform;
-        getRenderTarget().draw(shape, transform.getTransform());
+        getRenderTarget().draw(shape);
     }
+}
+
+void TileRenderingSystem::receive(const TileCollisionEvent& event){
+    event.tile.getComponent<TileComponent>().shape.setFillColor(sf::Color::Blue);
 }

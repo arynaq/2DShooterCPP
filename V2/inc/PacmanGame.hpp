@@ -38,6 +38,7 @@ class PacmanGame {
         TileRenderingSystem& m_tileRenderingSystem;
         CollisionSystem& m_collisionSystem;
         DebugSystem& m_debugSystem;
+        MapSystem& m_mapSystem;
         void loadTextures();
 
 

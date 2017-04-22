@@ -1,9 +1,10 @@
 #pragma once
+
 #include "System.hpp"
-#include "TransformComponent.hpp"
-#include "VelocityComponent.hpp"
+#include "Components.hpp"
+#include "Events.hpp"
 #include "MessageHandler.hpp"
-#include "CollisionEvent.hpp"
+#include "MapSystem.hpp"
 
 
 struct MovementSystem : System<Requires<VelocityComponent, TransformComponent>>, Receiver<MovementSystem> {

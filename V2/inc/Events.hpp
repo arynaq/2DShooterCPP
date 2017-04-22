@@ -1,2 +1,3 @@
 #pragma once
-#include "CollisionEvent.hpp"
+#include "EntityCollisionEvent.hpp"
+#include "TileCollisionEvent.hpp"
