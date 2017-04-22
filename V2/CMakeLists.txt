@@ -1,8 +1,8 @@
 #Change this if you need to target a specific CMake version
 cmake_minimum_required(VERSION 2.6)
 set (CMAKE_CXX_STANDARD 11)
-#set(SFML_ROOT "C:/Program Files (x86)/SFML")
 set(SFML_ROOT "C:\SFML")
+
 
 # Enable debug symbols by default
 # must be done before project() statement
@@ -23,9 +23,10 @@ configure_file(
 include_directories("${PROJECT_SOURCE_DIR}/inc/")
 
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 file(GLOB PRJ_SRC "${PROJECT_SOURCE_DIR}/inc/*.hpp" "${PROJECT_SOURCE_DIR}/src/*.cpp")
 # Define sources and executable
-set(EXECUTABLE_NAME "pacman")
+set(EXECUTABLE_NAME "PacManGame")
 add_executable(${EXECUTABLE_NAME} ${PRJ_SRC})
 
 
@@ -41,7 +42,7 @@ endif()
 
 
 # Install target
-install(TARGETS ${EXECUTABLE_NAME} DESTINATION bin)
+install(TARGETS ${EXECUTABLE_NAME} DESTINATION ${PROJECT_SOURCE_DIR}/bin)
 
 
 # CPack packaging

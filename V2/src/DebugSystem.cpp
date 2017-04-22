@@ -17,7 +17,6 @@ void DebugSystem::update(double dt){
         shape.setFillColor(sf::Color::Transparent);
         shape.setOutlineThickness(1);
         shape.setOutlineColor(sf::Color::Blue);
-        std::cout<<","<<shape.getSize().x<<","<<shape.getSize().y<<std::endl;
         renderTarget->draw(shape);
     }
 }

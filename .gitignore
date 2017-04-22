@@ -20,3 +20,6 @@
 !*.png
 !*.ttf
 !*.in
+
+*/build
+*/build/

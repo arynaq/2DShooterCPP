@@ -40,7 +40,7 @@ void GameLoader::run(){
             game->update(framedt);
         }
         if(doRender){
-            std::cout<<"Rendering at: " << std::fixed<<Clock<int>::now()<<std::endl;
+            std::cout<<"Rendering at: " << std::fixed<<WallClock::now()<<std::endl;
             game->render();
             window->display();
         }
