@@ -8,3 +8,4 @@
 #include "CollisionSystem.hpp"
 #include "DebugSystem.hpp"
 #include "MapSystem.hpp"
+#include "SpriteSheetSystem.hpp"

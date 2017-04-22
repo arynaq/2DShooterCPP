@@ -1,5 +1,4 @@
 #include "SpriteRenderingSystem.hpp"
-#include <iostream>
 #include <cassert>
 
 SpriteRenderingSystem::SpriteRenderingSystem(sf::RenderTarget& renderTarget )
@@ -15,7 +14,7 @@ sf::RenderTarget& SpriteRenderingSystem::getRenderTarget() const {
 void SpriteRenderingSystem::render(){
     auto& entities = getEntities();
     for(auto& entity : entities){
-        auto& sprite = entity.getComponent<SpriteComponent>().data.sprite;
+        auto& sprite = entity.getComponent<SpriteSheetComponent>().sprite;
         auto& transform = entity.getComponent<TransformComponent>().transform;
         getRenderTarget().draw(sprite, transform.getTransform());
     }

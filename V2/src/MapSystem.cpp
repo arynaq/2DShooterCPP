@@ -10,12 +10,9 @@ void MapSystem::initialize(){
             auto tile = getWorld().createEntity();
             auto& tileComponent = tile.addComponent<TileComponent>();
             if(map[i][j] == 1){
-                tileComponent.shape.setFillColor(sf::Color::Red);
-                // auto& collisionComponent = tile.addComponent<CollisionComponent>();
-                // collisionComponent.collisionBox.left = (j*32) + 1;
-                // collisionComponent.collisionBox.top  = (i*32) + 1;
-                // collisionComponent.collisionBox.width = 31;
-                // collisionComponent.collisionBox.height = 31;
+                tileComponent.shape.setFillColor(sf::Color::Black);
+                tileComponent.shape.setOutlineThickness(1);
+                tileComponent.shape.setOutlineColor(sf::Color::Red);
             }
             if(map[i][j] == 0){
                 tileComponent.shape.setOutlineThickness(1);
@@ -57,9 +54,6 @@ void MapSystem::checkTileCollision(Entity entity){
 }
 
 bool MapSystem::doesCollide(std::pair<std::size_t,std::size_t>& index,  sf::FloatRect& collisionBox){
-    std::cout<<"Requested check for i,j: " <<index.first<<","<<index.second;
-    std::cout<<" vs: " <<collisionBox.left<<","<<collisionBox.top;
-    std::cout<<","<<collisionBox.width<<","<<collisionBox.height<<std::endl;
     std::size_t mapSize = tileMap.size();
     if(index.first<0 || index.first>mapSize || index.second<0 || index.second>mapSize)
         return true;

@@ -12,21 +12,31 @@ PacmanGame::PacmanGame(sf::RenderTarget& renderer):
     m_tileRenderingSystem(m_world.addSystem<TileRenderingSystem>(renderer)),
     m_collisionSystem(m_world.addSystem<CollisionSystem>()),
     m_debugSystem(m_world.addSystem<DebugSystem>(renderer)),
-    m_mapSystem(m_world.addSystem<MapSystem>())
+    m_mapSystem(m_world.addSystem<MapSystem>()),
 {
 }
 
 
 void PacmanGame::init(){
     m_player = m_world.createEntity();
-    m_player.addComponent<SpriteComponent>().data.id = "player";
+    auto& spriteSheetComponent = m_player.addComponent<SpriteSheetComponent>();
     m_player.addComponent<TransformComponent>().transform.setPosition(32,32);
     m_player.addComponent<PlayerComponent>().startSpeed = 100;
     m_player.addComponent<VelocityComponent>();
-    auto& collisionBox =  m_player.addComponent<CollisionComponent>().collisionBox;
-    collisionBox.width = 31;
-    collisionBox.height = 31;
+    m_player.addComponent<CollisionComponent>().collisionBox;
+    spriteSheetComponent.textureSourceID = "player";
+    spriteSheetComponent.sprite.setTextureRect(sf::IntRect(0,0,32,32));
+
+    auto ghostOne = m_world.createEntity();
+    auto& velocityComponentOne = ghostOne.addComponent<VelocityComponent>().velocity;
+    auto& spriteSheetComponentOne = ghostOne.addComponent<SpriteSheetComponent>();
+    ghostOne.addComponent<CollisionComponent>().collisionBox;
+    spriteSheetComponentOne.textureSourceID = "orangeghost";
+    spriteSheetComponentOne.sprite.setTextureRect(sf::IntRect(32,0,32,32));
+    ghostOne.addComponent<TransformComponent>().transform.setPosition(172,172);
+    velocityComponentOne.x = 200;
     m_player.activate();
+    ghostOne.activate();
 
 
 
@@ -39,7 +49,7 @@ void PacmanGame::init(){
 }
 
 void PacmanGame::render(){
-    m_renderTarget->clear(sf::Color(0,117,51));
+    m_renderTarget->clear(sf::Color(0xFF,0xFF,0xFF));
     m_tileRenderingSystem.render();
     m_spriteRenderingSystem.render();
     m_debugSystem.update(0);

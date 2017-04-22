@@ -5,15 +5,15 @@
 void TextureCacheSystem::update(){
     auto& entities = getEntities();
     for(auto& entity : entities){
-        auto& spriteComponent = entity.getComponent<SpriteComponent>();
-        auto& data = spriteComponent.data;
-        auto find = m_textures.find(data.id);
+        auto& spriteSheetComponent = entity.getComponent<SpriteSheetComponent>();
+        auto& id = spriteSheetComponent.textureSourceID;
+        auto find = m_textures.find(id);
         /** Texture not found **/
         if(find == m_textures.end()){
-            m_textures[data.id].reset(new sf::Texture());
-            auto& texture = *m_textures[data.id];
-            if(texture.loadFromFile("res/textures/"+data.id+".png")){
-                spriteComponent.data.sprite.setTexture(texture,true);
+            m_textures[id].reset(new sf::Texture());
+            auto& texture = *m_textures[id];
+            if(texture.loadFromFile("res/textures/"+id+".png")){
+                spriteSheetComponent.sprite.setTexture(texture);
             }
         }
         /** Texture found **/

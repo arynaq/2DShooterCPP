@@ -1,16 +1,14 @@
 #pragma once
+
 #include "System.hpp"
-#include "SpriteComponent.hpp"
-#include "TransformComponent.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include "MessageHandler.hpp"
-#include <string>
-#include <iostream>
+#include "Components.hpp"
 
 
 
 
-struct SpriteRenderingSystem : System<Requires<SpriteComponent, TransformComponent>>, Receiver<SpriteRenderingSystem> {
+struct SpriteRenderingSystem : System<Requires<SpriteSheetComponent, TransformComponent>>, Receiver<SpriteRenderingSystem> {
     public:
         SpriteRenderingSystem(sf::RenderTarget& renderTarget);
         /**
