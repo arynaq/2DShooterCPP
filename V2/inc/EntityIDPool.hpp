@@ -28,7 +28,6 @@ class EntityIDPool{
 
 
     private:
-        std::size_t m_defaultPoolSize;
 
 
         Entity::ID::u32 m_nextID;

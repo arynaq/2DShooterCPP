@@ -7,9 +7,10 @@
 #include "Events.hpp"
 
 struct CollisionSystem:
-    System<Requires<CollisionComponent, TransformComponent>>,
+    System<Requires<CollisionComponent, TransformComponent, VelocityComponent>>,
     Receiver<CollisionSystem>
 {
     void receive(const TileCollisionEvent& event);
-    void update(MapSystem& map, double dt);
+    void update(double dt);
+    double m_dt;
 };

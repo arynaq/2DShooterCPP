@@ -1,7 +1,6 @@
 #include "EntityIDPool.hpp"
 
 EntityIDPool::EntityIDPool(std::size_t poolSize) :
-    m_defaultPoolSize(poolSize),
     m_nextID(0),
     m_counts(poolSize)
 {

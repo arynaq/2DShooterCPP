@@ -26,6 +26,10 @@ void Entity::addComponent(Component* component, TypeID componentTypeID){
     getWorld().m_entityAttributes.componentStorage.addComponent(*this, component, componentTypeID);
 }
 
+bool Entity::hasComponent(TypeID componentTypeID) const{
+    return getWorld().m_entityAttributes.componentStorage.hasComponent(*this,componentTypeID);
+}
+
 void Entity::removeComponent(TypeID componentTypeID){
     getWorld().m_entityAttributes.componentStorage.removeComponent(*this, componentTypeID);
 }

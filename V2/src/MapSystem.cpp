@@ -26,9 +26,12 @@ void MapSystem::initialize(){
     }
 }
 
-void MapSystem::checkTileCollision(Entity entity){
-    auto& entityCollisionBox = entity.getComponent<CollisionComponent>().collisionBox;
-    std::size_t j = entityCollisionBox.left / tileSize;
+bool MapSystem::checkTileCollision(Entity entity){
+    if(!entity.hasComponent<CollisionComponent>())
+        return true;
+
+    sf::FloatRect entityCollisionBox = entity.getComponent<CollisionComponent>().collisionBox;
+    std::size_t j = entityCollisionBox.left/ tileSize;
     std::size_t i = entityCollisionBox.top / tileSize;
     std::size_t i0 = i-1;
     std::size_t i1 = i+1;
@@ -36,28 +39,87 @@ void MapSystem::checkTileCollision(Entity entity){
     std::size_t j1 = j+1;
     std::array<std::pair<std::size_t,std::size_t>,9> indicesToCheck = {{
         {i0,j0},
-        {i0,j},
-        {i0,j1},
-        {i,j0},
-        {i,j},
-        {i,j1},
-        {i1,j0},
-        {i1,j},
-        {i1,j1}
+            {i0,j},
+            {i0,j1},
+            {i,j0},
+            {i,j},
+            {i,j1},
+            {i1,j0},
+            {i1,j},
+            {i1,j1}
     }};
+
     for(auto& index : indicesToCheck){
-        if(doesCollide(index, entityCollisionBox)){
-            auto& messageHandler = getWorld().messageHandler();
-            messageHandler.emit<TileCollisionEvent>(entity, tileMap[index.first][index.second]);
+
+        std::size_t mapSize = tileMap.size();
+        if(index.first>=mapSize || index.second>=mapSize)
+            return true;
+
+        if(map[index.first][index.second] == 1)
+            continue;
+
+
+        auto& tileCollisionBox = tileMap[index.first][index.second].getComponent<TileComponent>().shape;
+
+        if(entityCollisionBox.intersects(tileCollisionBox.getGlobalBounds())){
+            if(entity.hasComponent<VelocityComponent>()){
+                auto& prevVelocity = entity.getComponent<VelocityComponent>().prevVelocity;
+                //float dx = entityCollisionBox.width  + (entityCollisionBox.left- tileCollisionBox.getPosition().x)+1;
+                //float dy = entityCollisionBox.height + (entityCollisionBox.top - tileCollisionBox.getPosition().y)+1;
+                float dx = entityCollisionBox.width  + (entityCollisionBox.left- tileCollisionBox.getPosition().x)+1;
+                float dy = entityCollisionBox.height + (entityCollisionBox.top - tileCollisionBox.getPosition().y)+1;
+                if(prevVelocity.x < 1E-3 && prevVelocity.x>-1E-3)
+                    entity.getComponent<TransformComponent>().transform.move(sf::Vector2f(0,-dy));
+                if(prevVelocity.y < 1E-3 && prevVelocity.y>-1E-3)
+                    entity.getComponent<TransformComponent>().transform.move(sf::Vector2f(-dx,0));
+            }
+            return true;
         }
+        /**
+         *
+         std::size_t mapSize = tileMap.size();
+         if(index.first>=mapSize || index.second>=mapSize)
+         return true;
+
+         if(map[index.first][index.second] == 1) 
+         return false;
+
+         auto& tileCollisionBox = tileMap[index.first][index.second].getComponent<TileComponent>().shape;
+
+         if(entityCollisionBox.intersects(tileCollisionBox.getGlobalBounds())){
+         float dx = tileCollisionBox.getPosition().x - entityCollisionBox.left;
+         float dy = tileCollisionBox.getPosition().y - entityCollisionBox.top;
+         std::cout<<"dx,dy: " << dx <<","<<dy<<std::endl;
+         return true;
+         }
+         **/
+        /**
+          if(doesCollide(index, entityCollisionBox)){
+
+        //  auto& messageHandler = getWorld().messageHandler();
+        //  messageHandler.emit<TileCollisionEvent>(entity, tileMap[index.first][index.second]);
+        return true;
+        }
+         **/
     }
+
+    return false;
 }
 
 bool MapSystem::doesCollide(std::pair<std::size_t,std::size_t>& index,  sf::FloatRect& collisionBox){
     std::size_t mapSize = tileMap.size();
-    if(index.first<0 || index.first>mapSize || index.second<0 || index.second>mapSize)
+    if(index.first>=mapSize || index.second>=mapSize)
         return true;
 
     if(map[index.first][index.second] == 1) return false;
-    return collisionBox.intersects(tileMap[index.first][index.second].getComponent<TileComponent>().shape.getGlobalBounds());
+
+    auto& tileCollisionBox = tileMap[index.first][index.second].getComponent<TileComponent>().shape;
+
+    if(collisionBox.intersects(tileCollisionBox.getGlobalBounds())){
+        float dx = tileCollisionBox.getPosition().x - collisionBox.left;
+        float dy = tileCollisionBox.getPosition().y - collisionBox.top;
+        std::cout<<"dx,dy: " << dx <<","<<dy<<std::endl;
+        return true;
+    }
+    return false;
 }

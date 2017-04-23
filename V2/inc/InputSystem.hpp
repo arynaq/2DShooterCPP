@@ -1,14 +1,10 @@
 #pragma once
 #include "System.hpp"
-#include "PlayerComponent.hpp"
-#include "VelocityComponent.hpp"
+#include "Events.hpp"
+#include "Components.hpp"
 #include "MessageHandler.hpp"
-#include <string>
 
-struct InputSystem : System<Requires<PlayerComponent, VelocityComponent>>, Receiver<InputSystem>{
-    void receive(const std::string& s){
-        std::cout<<"Inputsystem received string: " << s << std::endl;
-    }
+struct InputSystem : System<Requires<PlayerComponent, VelocityComponent>>{
     void update();
     ~InputSystem(){}
 };

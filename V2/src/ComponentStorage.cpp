@@ -34,6 +34,12 @@ void ComponentStorage::addComponent(Entity& e, Component* c, TypeID componentTyp
     entityData.componentTypeList[componentTypeID] = true;
 }
 
+bool ComponentStorage::hasComponent(const Entity& e, TypeID componentTypeID){
+    Entity::ID::u32 index = e.getID().index;
+    EntityComponents& entityData = m_componentEntries[index];
+    return entityData.componentTypeList[componentTypeID];
+}
+
 
 void ComponentStorage::removeComponent(Entity& entity, TypeID componentTypeID){
     assert(entity.isValid() && "Invalid entity cannot have components added to it ");

@@ -97,6 +97,7 @@ class Entity {
          *  */
         void addComponent(Component* component, TypeID componentTypeID);
         void removeComponent(TypeID componentTypeID);
+        bool hasComponent(TypeID componentTypeID) const;
         Component& getComponent(TypeID componentTypeID) const;
 };
 
@@ -112,6 +113,12 @@ T& Entity::addComponent(Args&&...args){
     auto component = new T{std::forward<Args>(args)...};
     addComponent(component, ComponentTypeID<T>());
     return *component;
+}
+
+template<typename T>
+bool Entity::hasComponent() const{
+    bool value = hasComponent(ComponentTypeID<T>());
+    return value;
 }
 
 

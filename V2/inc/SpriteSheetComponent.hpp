@@ -2,14 +2,14 @@
 #include "Component.hpp"
 #include <SFML/Graphics/Sprite.hpp>
 #include <string>
-#include <vector>
 
-using SpriteFrames = std::vector<sf::IntRect>;
 struct SpriteSheetComponent : Component {
+    std::string textureSourceID;
     sf::Sprite sprite;
-    SpriteFrames frames;
-    int framenumber;
+    
+    int framenumber = 0;
+    int frameRows = 1;
+    int frameCols = 4;
     int framewidth = 32;
     int frameheight = 32;
-    std::string textureSourceID;
 };

@@ -6,14 +6,14 @@
 
 
 
-void CollisionSystem::update(MapSystem& map, double dt){
+void CollisionSystem::update(double dt){
+    m_dt = dt;
     auto& entities = getEntities();
     for(auto& entity : entities){
         auto& collisionBox = entity.getComponent<CollisionComponent>().collisionBox;
         auto& transform = entity.getComponent<TransformComponent>().transform;
         collisionBox.left = transform.getPosition().x;
         collisionBox.top  = transform.getPosition().y;
-        map.checkTileCollision(entity);
     }
     for(std::size_t i=0; i<entities.size(); ++i){
         auto& left = entities[i];
@@ -44,5 +44,4 @@ void CollisionSystem::update(MapSystem& map, double dt){
 }
 
 void CollisionSystem::receive(const TileCollisionEvent& event){
-    std::cout<<"Received tile collision event..."<<std::endl;
 }

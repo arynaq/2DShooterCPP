@@ -10,7 +10,8 @@ using TileMap = std::array<TileRow, 32>;
 
 struct MapSystem : System<Requires<TileComponent>>{
     void initialize() override;
-    void checkTileCollision(Entity entity);
+    /** Check if the entity collides now or in the future **/
+    bool checkTileCollision(Entity entity);
 private:
     TileMap tileMap;
     const int tileSize = 32;

@@ -33,7 +33,7 @@ class PacmanGame {
         /** Systems **/
         SpriteRenderingSystem& m_spriteRenderingSystem;
         InputSystem& m_inputSystem;
-        TextureCacheSystem& m_textureCache;
+        SpriteManagementSystem& m_spriteManagementSystem;
         MovementSystem& m_movementSystem;
         TileRenderingSystem& m_tileRenderingSystem;
         CollisionSystem& m_collisionSystem;

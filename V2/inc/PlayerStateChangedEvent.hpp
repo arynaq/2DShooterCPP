@@ -2,10 +2,11 @@
 #include "PlayerComponent.hpp"
 
 struct PlayerStateChangedEvent {
+    Entity player;
     PlayerComponent::PlayerState oldState;
     PlayerComponent::PlayerState newState;
 
-    PlayerStateChangedEvent(PlayerComponent::PlayerState oldState, PlayerComponent::PlayerState newState):
-        oldState(oldState),newState(newState){
+    PlayerStateChangedEvent(Entity player, PlayerComponent::PlayerState oldState, PlayerComponent::PlayerState newState):
+        player(player),oldState(oldState),newState(newState){
     }
 };

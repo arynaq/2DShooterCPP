@@ -7,12 +7,12 @@ PacmanGame::PacmanGame(sf::RenderTarget& renderer):
     m_renderTarget(&renderer),
     m_spriteRenderingSystem(m_world.addSystem<SpriteRenderingSystem>(renderer)),
     m_inputSystem(m_world.addSystem<InputSystem>()),
-    m_textureCache(m_world.addSystem<TextureCacheSystem>()),
+    m_spriteManagementSystem(m_world.addSystem<SpriteManagementSystem>()),
     m_movementSystem(m_world.addSystem<MovementSystem>()),
     m_tileRenderingSystem(m_world.addSystem<TileRenderingSystem>(renderer)),
     m_collisionSystem(m_world.addSystem<CollisionSystem>()),
     m_debugSystem(m_world.addSystem<DebugSystem>(renderer)),
-    m_mapSystem(m_world.addSystem<MapSystem>()),
+    m_mapSystem(m_world.addSystem<MapSystem>())
 {
 }
 
@@ -20,30 +20,32 @@ PacmanGame::PacmanGame(sf::RenderTarget& renderer):
 void PacmanGame::init(){
     m_player = m_world.createEntity();
     auto& spriteSheetComponent = m_player.addComponent<SpriteSheetComponent>();
-    m_player.addComponent<TransformComponent>().transform.setPosition(32,32);
+    m_player.addComponent<TransformComponent>().transform.setPosition(150,150);
     m_player.addComponent<PlayerComponent>().startSpeed = 100;
     m_player.addComponent<VelocityComponent>();
-    m_player.addComponent<CollisionComponent>().collisionBox;
+    m_player.addComponent<CollisionComponent>();
     spriteSheetComponent.textureSourceID = "player";
     spriteSheetComponent.sprite.setTextureRect(sf::IntRect(0,0,32,32));
 
+
+    /**
     auto ghostOne = m_world.createEntity();
     auto& velocityComponentOne = ghostOne.addComponent<VelocityComponent>().velocity;
     auto& spriteSheetComponentOne = ghostOne.addComponent<SpriteSheetComponent>();
-    ghostOne.addComponent<CollisionComponent>().collisionBox;
+    ghostOne.addComponent<CollisionComponent>();
     spriteSheetComponentOne.textureSourceID = "orangeghost";
     spriteSheetComponentOne.sprite.setTextureRect(sf::IntRect(32,0,32,32));
     ghostOne.addComponent<TransformComponent>().transform.setPosition(172,172);
     velocityComponentOne.x = 200;
-    m_player.activate();
     ghostOne.activate();
+    **/
 
+    m_player.activate();
 
 
    // m_world.messageHandler().subscribe<std::string>(m_inputSystem);
    // m_world.messageHandler().subscribe<std::string>(m_spriteRenderingSystem);
-    m_world.messageHandler().subscribe<TileCollisionEvent>(m_collisionSystem);
-    m_world.messageHandler().subscribe<TileCollisionEvent>(m_tileRenderingSystem);
+    m_world.messageHandler().subscribe<PlayerStateChangedEvent>(m_spriteManagementSystem);
     loadTextures();
     m_running = true;
 }
@@ -58,9 +60,9 @@ void PacmanGame::render(){
 void PacmanGame::update(float dt){
     m_world.refresh();
     m_inputSystem.update();
-    m_movementSystem.update(dt);
-    m_textureCache.update();
-    m_collisionSystem.update(m_mapSystem,dt);
+    m_movementSystem.update(m_mapSystem,dt);
+    m_collisionSystem.update(dt);
+    m_spriteManagementSystem.update();
 }
 
 void PacmanGame::handleEvent(sf::Event& event){

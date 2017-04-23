@@ -41,6 +41,8 @@ public:
  * **/
 template <typename Derived>
 class Receiver{
+public:
+    virtual ~Receiver(){}
 private:
     friend class MessageHandler;
     boost::ptr_map<TypeID, boost::signals2::connection> connections;

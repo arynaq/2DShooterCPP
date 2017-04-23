@@ -132,7 +132,7 @@ T& World::addSystem(Args&&...args){
     return static_cast<T&>(*m_systems[SystemTypeId<T>()].get());
 }
 
-template <class RequireList, class ExcludeList = Excludes<>>
+template <class RequireList, class ExcludeList> //= Excludes<>>
 World::EntityArray World::getEntities(){
     Filter f = MakeFilter<RequireList,ExcludeList>();
     return getEntities(f);
