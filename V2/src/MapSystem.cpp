@@ -64,14 +64,23 @@ bool MapSystem::checkTileCollision(Entity entity){
         if(entityCollisionBox.intersects(tileCollisionBox.getGlobalBounds())){
             if(entity.hasComponent<VelocityComponent>()){
                 auto& prevVelocity = entity.getComponent<VelocityComponent>().prevVelocity;
+                /**
                 //float dx = entityCollisionBox.width  + (entityCollisionBox.left- tileCollisionBox.getPosition().x)+1;
                 //float dy = entityCollisionBox.height + (entityCollisionBox.top - tileCollisionBox.getPosition().y)+1;
-                float dx = entityCollisionBox.width  + (entityCollisionBox.left- tileCollisionBox.getPosition().x)+1;
-                float dy = entityCollisionBox.height + (entityCollisionBox.top - tileCollisionBox.getPosition().y)+1;
+                float dx =  entityCollisionBox.left- tileCollisionBox.getPosition().x;
+                float dy =  entityCollisionBox.top - tileCollisionBox.getPosition().y;
+                if(dx > 0 && prevVelocity.x<-1E-3){
+                    dx = tileCollisionBox
+                }
                 if(prevVelocity.x < 1E-3 && prevVelocity.x>-1E-3)
                     entity.getComponent<TransformComponent>().transform.move(sf::Vector2f(0,-dy));
                 if(prevVelocity.y < 1E-3 && prevVelocity.y>-1E-3)
                     entity.getComponent<TransformComponent>().transform.move(sf::Vector2f(-dx,0));
+                    **/
+
+                sf::Vector2f dr = prevVelocity*(1.0f/60);
+                entity.getComponent<TransformComponent>().transform.move(-2.0f*dr);
+            
             }
             return true;
         }

@@ -43,8 +43,6 @@ void PacmanGame::init(){
     m_player.activate();
 
 
-   // m_world.messageHandler().subscribe<std::string>(m_inputSystem);
-   // m_world.messageHandler().subscribe<std::string>(m_spriteRenderingSystem);
     m_world.messageHandler().subscribe<PlayerStateChangedEvent>(m_spriteManagementSystem);
     loadTextures();
     m_running = true;

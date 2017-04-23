@@ -14,6 +14,4 @@ void MovementSystem::update(MapSystem& map, double dt){
 
 
 void MovementSystem::receive(const CollisionResolutionEvent& event){
-    auto& transform = event.entity.getComponent<TransformComponent>().transform;
-    transform.move(event.moveBy);
 }
