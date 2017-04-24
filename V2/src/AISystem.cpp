@@ -5,6 +5,14 @@
 #include <vector>
 #include <functional>
 
+/**
+ * @TODO:
+ * You need the list of nodes before the update runs...
+ * Which means
+ * a) Create a list of nodes for every single tile
+ * b) Dont depend on the idea of node, keep maybe
+ *    An unordered_map for each tile to show whether it has been visited
+ *    */
 void AISystem::update(MapSystem& map, double dt){
     auto& entities = getEntities();
     for(auto& entity : entities){
@@ -34,19 +42,16 @@ void AISystem::update(MapSystem& map, double dt){
             for(auto& neighbor : neighbors){
                 ANode* next = new ANode{&current, neighbor, 0, 0, 0};
                 auto& neighborTile  = neighbor.getComponent<TileComponent>().shape;
-                double dx = std::abs(currentTile.getPosition().x - neighborTile.getPosition().x);
-                double dy = std::abs(currentTile.getPosition().y - neighborTile.getPosition().y);
+                double dx = std::abs(currentTile.getPosition().x - neighborTile.getPosition().x)*1.0/32;
+                double dy = std::abs(currentTile.getPosition().y - neighborTile.getPosition().y)*1.0/32;
                 // manhattan cost
                 double m_cost = dx + dy;
-                double cost = current.f + m_cost;
+                double newCost = current.f + m_cost;
+                if(newCost < next.f){
+
+                }
                 next->f = cost;
                 frontier.push(next);
-            }
-
-            for(std::size_t i=0; i<frontier.size(); ++i){
-                ANode* node = frontier.top();
-                frontier.pop();
-                std::cout<<"Cost: " << node->f<<std::endl;
             }
         }
     }
