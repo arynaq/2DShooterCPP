@@ -16,6 +16,7 @@ struct SpriteManagementSystem:
     public:
         void update();
         void receive(const PlayerStateChangedEvent& event);
+        void receive(const DirectionChangedEvent& event);
     private:
         using TextureMap = std::unordered_map<std::string, std::unique_ptr<sf::Texture>>;
         TextureMap m_textures;

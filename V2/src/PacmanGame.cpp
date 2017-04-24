@@ -29,13 +29,26 @@ void PacmanGame::init(){
     spriteSheetComponent.sprite.setTextureRect(sf::IntRect(0,0,32,32));
 
 
+    auto ghostOne = m_world.createEntity();
+    auto& spriteSheetComponentOne = ghostOne.addComponent<SpriteSheetComponent>();
+    ghostOne.addComponent<TransformComponent>().transform.setPosition(100,300);
+    ghostOne.addComponent<VelocityComponent>().velocity.x = 100;
+    ghostOne.addComponent<DirectionComponent>().direction = DirectionComponent::Direction::EAST;
+    ghostOne.addComponent<CollisionComponent>();
+    spriteSheetComponentOne.textureSourceID = "redghost";
+    spriteSheetComponentOne.sprite.setTextureRect(sf::IntRect(0,0,32,32));
+
+
     m_player.activate();
+    ghostOne.activate();
     m_world.messageHandler().subscribe<PlayerStateChangedEvent>(m_spriteManagementSystem);
+    m_world.messageHandler().subscribe<DirectionChangedEvent>(m_spriteManagementSystem);
+    m_world.messageHandler().emit<DirectionChangedEvent>(ghostOne, DirectionComponent::Direction::EAST);
     m_running = true;
 }
 
 void PacmanGame::render(){
-    m_renderTarget->clear(sf::Color(0xFF,0xFF,0xFF));
+    m_renderTarget->clear(sf::Color(0x00,0x2b,0x36));
     m_tileRenderingSystem.render();
     m_spriteRenderingSystem.render();
     m_debugSystem.update(0);

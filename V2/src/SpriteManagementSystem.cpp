@@ -25,12 +25,34 @@ void SpriteManagementSystem::update(){
     }
 }
 
-void SpriteManagementSystem::receive(const PlayerStateChangedEvent& event){
-    auto oldState = event.oldState;
-    auto newState = event.newState;
-    std::cout << "Old state:" <<static_cast<std::underlying_type<PlayerComponent::PlayerState>::type>(oldState) << std::endl;
-    std::cout << "New state:" <<static_cast<std::underlying_type<PlayerComponent::PlayerState>::type>(newState) << std::endl;
+void SpriteManagementSystem::receive(const DirectionChangedEvent& event){
+    auto& entity = event.entity;
+    auto& direction = event.direction;
+    auto& spriteSheetComponent = entity.getComponent<SpriteSheetComponent>();
+    int framenumber = spriteSheetComponent.framenumber;
+    int framewidth = spriteSheetComponent.framewidth;
+    int frameheight = spriteSheetComponent.frameheight;
+    int frameCols = spriteSheetComponent.frameCols;
+    if(direction == DirectionComponent::Direction::WEST){
+        framenumber = spriteSheetComponent.framenumber = 0;
+    }
+    else if(direction == DirectionComponent::Direction::EAST){
+        framenumber = spriteSheetComponent.framenumber = 1;
+    }
+    else if(direction == DirectionComponent::Direction::SOUTH){
+        framenumber = spriteSheetComponent.framenumber = 2;
+    }
+    else if(direction == DirectionComponent::Direction::NORTH){
+        framenumber = spriteSheetComponent.framenumber = 3;
+    }
+    int framex = (framenumber % frameCols) * framewidth;
+    int framey = (framenumber / frameCols) * frameheight;
+    sf::IntRect frameBox(framex,framey,framewidth,frameheight);
+    spriteSheetComponent.sprite.setTextureRect(frameBox);
+}
 
+void SpriteManagementSystem::receive(const PlayerStateChangedEvent& event){
+    auto newState = event.newState;
     auto& spriteSheetComponent = event.player.getComponent<SpriteSheetComponent>();
     int framenumber = spriteSheetComponent.framenumber;
     int framewidth = spriteSheetComponent.framewidth;
