@@ -4,7 +4,7 @@
 #include "Components.hpp"
 #include "MessageHandler.hpp"
 
-struct InputSystem : System<Requires<PlayerComponent, VelocityComponent>>{
+struct InputSystem : System<Requires<PlayerComponent, VelocityComponent, DirectionComponent>>{
     void update();
     ~InputSystem(){}
 };

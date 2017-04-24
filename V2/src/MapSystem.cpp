@@ -2,6 +2,7 @@
 #include "World.hpp"
 #include <iostream>
 #include "Events.hpp"
+#include <cmath>
 
 void MapSystem::initialize(){
     for(int i=0; i<32; ++i){
@@ -50,68 +51,36 @@ bool MapSystem::checkTileCollision(Entity entity){
     }};
 
     for(auto& index : indicesToCheck){
-
         std::size_t mapSize = tileMap.size();
         if(index.first>=mapSize || index.second>=mapSize)
             return true;
-
         if(map[index.first][index.second] == 1)
             continue;
 
-
         auto& tileCollisionBox = tileMap[index.first][index.second].getComponent<TileComponent>().shape;
-
         if(entityCollisionBox.intersects(tileCollisionBox.getGlobalBounds())){
-            if(entity.hasComponent<VelocityComponent>()){
-                auto& prevVelocity = entity.getComponent<VelocityComponent>().prevVelocity;
-                /**
-                //float dx = entityCollisionBox.width  + (entityCollisionBox.left- tileCollisionBox.getPosition().x)+1;
-                //float dy = entityCollisionBox.height + (entityCollisionBox.top - tileCollisionBox.getPosition().y)+1;
-                float dx =  entityCollisionBox.left- tileCollisionBox.getPosition().x;
-                float dy =  entityCollisionBox.top - tileCollisionBox.getPosition().y;
-                if(dx > 0 && prevVelocity.x<-1E-3){
-                    dx = tileCollisionBox
-                }
-                if(prevVelocity.x < 1E-3 && prevVelocity.x>-1E-3)
-                    entity.getComponent<TransformComponent>().transform.move(sf::Vector2f(0,-dy));
-                if(prevVelocity.y < 1E-3 && prevVelocity.y>-1E-3)
-                    entity.getComponent<TransformComponent>().transform.move(sf::Vector2f(-dx,0));
-                    **/
-
-                sf::Vector2f dr = prevVelocity*(1.0f/60);
-                entity.getComponent<TransformComponent>().transform.move(-2.0f*dr);
-            
+            float dx = (entityCollisionBox.left - tileCollisionBox.getPosition().x);
+            float dy = (entityCollisionBox.top - tileCollisionBox.getPosition().y);
+            float overlapWidth = entityCollisionBox.width - std::abs(dx) + 1;
+            float overlapHeight = entityCollisionBox.height - std::abs(dy) + 1;
+            sf::Vector2f dr;
+            if(overlapWidth > overlapHeight){
+                if(dy<0)
+                    dr.y = -overlapHeight;
+                else
+                    dr.y = overlapHeight;
             }
+            else {
+                if(dx<0)
+                    dr.x = -overlapWidth;
+                else
+                    dr.x = overlapWidth;
+            }
+            auto& transform = entity.getComponent<TransformComponent>().transform;
+            transform.move(dr);
             return true;
         }
-        /**
-         *
-         std::size_t mapSize = tileMap.size();
-         if(index.first>=mapSize || index.second>=mapSize)
-         return true;
-
-         if(map[index.first][index.second] == 1) 
-         return false;
-
-         auto& tileCollisionBox = tileMap[index.first][index.second].getComponent<TileComponent>().shape;
-
-         if(entityCollisionBox.intersects(tileCollisionBox.getGlobalBounds())){
-         float dx = tileCollisionBox.getPosition().x - entityCollisionBox.left;
-         float dy = tileCollisionBox.getPosition().y - entityCollisionBox.top;
-         std::cout<<"dx,dy: " << dx <<","<<dy<<std::endl;
-         return true;
-         }
-         **/
-        /**
-          if(doesCollide(index, entityCollisionBox)){
-
-        //  auto& messageHandler = getWorld().messageHandler();
-        //  messageHandler.emit<TileCollisionEvent>(entity, tileMap[index.first][index.second]);
-        return true;
-        }
-         **/
     }
-
     return false;
 }
 

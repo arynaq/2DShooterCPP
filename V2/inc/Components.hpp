@@ -6,3 +6,4 @@
 #include "TransformComponent.hpp"
 #include "TileComponent.hpp"
 #include "CollisionComponent.hpp"
+#include "DirectionComponent.hpp"

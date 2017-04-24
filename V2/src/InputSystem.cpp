@@ -6,11 +6,10 @@
 
 void InputSystem::update(){
     auto& entities = getEntities();
-    //auto playerEntities = getWorld().getEntities<Requires<PlayerComponent>>();
     for(auto& entity : entities){
         auto& player = entity.getComponent<PlayerComponent>();
         auto& velocity = entity.getComponent<VelocityComponent>().velocity;
-        auto& oldVelocity = entity.getComponent<VelocityComponent>().prevVelocity;
+        auto& direction = entity.getComponent<DirectionComponent>().direction;
         auto oldState = player.state;
         auto newState = player.state;
 
@@ -18,25 +17,25 @@ void InputSystem::update(){
             velocity.x= -player.startSpeed;
             velocity.y = 0;
             newState = PlayerComponent::PlayerState::LEFT_MOVING;
-            oldVelocity = velocity;
+            direction = DirectionComponent::Direction::WEST;
         }
         else if(sf::Keyboard::isKeyPressed(player.right)){
             velocity.x = player.startSpeed;
             velocity.y = 0;
             newState = PlayerComponent::PlayerState::RIGHT_MOVING;
-            oldVelocity = velocity;
+            direction = DirectionComponent::Direction::EAST;
         }
         else if(sf::Keyboard::isKeyPressed(player.up)){
             velocity.y = -player.startSpeed;
             velocity.x = 0;
             newState = PlayerComponent::PlayerState::UP_MOVING;
-            oldVelocity = velocity;
+            direction = DirectionComponent::Direction::NORTH;
         }
         else if(sf::Keyboard::isKeyPressed(player.down)){
             velocity.y = player.startSpeed;
             velocity.x = 0;
             newState = PlayerComponent::PlayerState::DOWN_MOVING;
-            oldVelocity = velocity;
+            direction = DirectionComponent::Direction::SOUTH;
         }
 
         else {

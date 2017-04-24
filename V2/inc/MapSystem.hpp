@@ -4,13 +4,13 @@
 #include "System.hpp"
 #include "Components.hpp"
 #include <array>
+#include <map>
 
 using TileRow = std::array<Entity, 32>;
 using TileMap = std::array<TileRow, 32>;
 
 struct MapSystem : System<Requires<TileComponent>>{
     void initialize() override;
-    /** Check if the entity collides now or in the future **/
     bool checkTileCollision(Entity entity);
 private:
     TileMap tileMap;
