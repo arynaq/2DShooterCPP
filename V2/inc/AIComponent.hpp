@@ -3,4 +3,5 @@
 
 
 struct AIComponent : Component{
+    Entity target;
 };

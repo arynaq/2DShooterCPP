@@ -25,6 +25,58 @@ void MapSystem::initialize(){
     }
 }
 
+Entity MapSystem::getOccupiedTile(const Entity& e){
+    auto entityCollisionBox = e.getComponent<CollisionComponent>().collisionBox;
+    std::size_t j = (entityCollisionBox.left + (entityCollisionBox.width * 0.5))/ tileSize;
+    std::size_t i = (entityCollisionBox.top + (entityCollisionBox.height * 0.5))/ tileSize;
+    assert(i<tileMap.size() && j<tileMap.size() && "Entity is outside mapp..");
+    return tileMap[i][j];
+}
+
+std::vector<Entity> MapSystem::getNeighboringTiles(const Entity& e){
+    std::vector<Entity> neighbors;
+    neighbors.reserve(8);
+    if(e.hasComponent<CollisionComponent>()){
+        auto entityCollisionBox = e.getComponent<CollisionComponent>().collisionBox;
+        std::size_t j = (entityCollisionBox.left + (entityCollisionBox.width * 0.5))/ tileSize;
+        std::size_t i = (entityCollisionBox.top + (entityCollisionBox.height * 0.5))/ tileSize;
+        std::size_t i0 = i-1;
+        std::size_t i1 = i+1;
+        std::size_t j0 = j-1;
+        std::size_t j1 = j+1;
+        std::array<std::pair<std::size_t,std::size_t>,9> indicesToCheck = {{
+            /**
+              {i0,j},
+              {i,j0},
+              {i,j1},
+              {i1,j},
+
+             **/
+            {i0,j0},
+                {i0,j},
+                {i0,j1},
+                {i,j0},
+                {i,j},
+                {i,j1},
+                {i1,j0},
+                {i1,j},
+                {i1,j1}
+        }};
+
+        for(auto& index : indicesToCheck){
+            if(index.first >=tileMap.size() || index.second>=tileMap.size())
+                continue;
+            /**
+            if(map[index.first][index.second] == 0)
+                continue;
+                **/
+            neighbors.push_back(tileMap[index.first][index.second]);
+
+        }
+    }
+    return neighbors;
+}
+
 bool MapSystem::checkTileCollision(Entity entity){
     if(!entity.hasComponent<CollisionComponent>())
         return true;

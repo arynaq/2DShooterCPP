@@ -12,7 +12,8 @@ PacmanGame::PacmanGame(sf::RenderTarget& renderer):
     m_tileRenderingSystem(m_world.addSystem<TileRenderingSystem>(renderer)),
     m_collisionSystem(m_world.addSystem<CollisionSystem>()),
     m_debugSystem(m_world.addSystem<DebugSystem>(renderer)),
-    m_mapSystem(m_world.addSystem<MapSystem>())
+    m_mapSystem(m_world.addSystem<MapSystem>()),
+    m_AISystem(m_world.addSystem<AISystem>())
 {
 }
 
@@ -35,6 +36,7 @@ void PacmanGame::init(){
     ghostOne.addComponent<VelocityComponent>().velocity.x = 100;
     ghostOne.addComponent<DirectionComponent>().direction = DirectionComponent::Direction::EAST;
     ghostOne.addComponent<CollisionComponent>();
+    ghostOne.addComponent<AIComponent>().target = m_player;
     spriteSheetComponentOne.textureSourceID = "redghost";
     spriteSheetComponentOne.sprite.setTextureRect(sf::IntRect(0,0,32,32));
 
@@ -57,6 +59,7 @@ void PacmanGame::render(){
 void PacmanGame::update(float dt){
     m_world.refresh();
     m_inputSystem.update();
+    m_AISystem.update(m_mapSystem, dt);
     m_movementSystem.update(m_mapSystem,dt);
     m_collisionSystem.update(dt);
     m_spriteManagementSystem.update();

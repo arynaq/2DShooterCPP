@@ -39,6 +39,7 @@ class PacmanGame {
         CollisionSystem& m_collisionSystem;
         DebugSystem& m_debugSystem;
         MapSystem& m_mapSystem;
+        AISystem& m_AISystem;
         void loadTextures();
 
 

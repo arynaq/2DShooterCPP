@@ -9,3 +9,4 @@
 #include "MapSystem.hpp"
 #include "SpriteSheetSystem.hpp"
 #include "SpriteManagementSystem.hpp"
+#include "AISystem.hpp"
