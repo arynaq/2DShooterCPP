@@ -12,6 +12,9 @@
  * a) Create a list of nodes for every single tile
  * b) Dont depend on the idea of node, keep maybe
  *    An unordered_map for each tile to show whether it has been visited
+ *    http://web.mit.edu/eranki/www/tutorials/search/
+ *http://stackoverflow.com/questions/6990168/a-star-algorithm
+ http://www.redblobgames.com/pathfinding/a-star/implementation.html
  *    */
 void AISystem::update(MapSystem& map, double dt){
     auto& entities = getEntities();
