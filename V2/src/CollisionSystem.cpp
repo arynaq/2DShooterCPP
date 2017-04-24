@@ -12,8 +12,8 @@ void CollisionSystem::update(double dt){
     for(auto& entity : entities){
         auto& collisionBox = entity.getComponent<CollisionComponent>().collisionBox;
         auto& transform = entity.getComponent<TransformComponent>().transform;
-        collisionBox.left = transform.getPosition().x;
-        collisionBox.top  = transform.getPosition().y;
+        collisionBox.left = transform.getPosition().x + 2;
+        collisionBox.top  = transform.getPosition().y + 2;
     }
     for(std::size_t i=0; i<entities.size(); ++i){
         auto& left = entities[i];
