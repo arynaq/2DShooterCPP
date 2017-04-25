@@ -33,6 +33,29 @@ double AISystem::manhattan_distance(Node& start, Node& end){
     double dx = std::abs(startIndex.second - endIndex.second);
     return dx + dy;
 }
+
+double AISystem::euclidean_distance(Node& start, Node& end){
+    auto& startIndex = start.location.getComponent<TileComponent>().index;
+    auto& endIndex = end.location.getComponent<TileComponent>().index;
+    double dx, dy;
+    if(startIndex.first > endIndex.first){
+        dy = (startIndex.first - endIndex.first);
+    }
+    else{
+        dy = (endIndex.first - startIndex.first);
+    }
+
+    if(startIndex.second > endIndex.second){
+        dx = startIndex.second - endIndex.second;
+    }
+    else {
+        dx = endIndex.second - startIndex.second;
+    }
+    std::cout<<"dx,dy: " << dx << "," << dy <<std::endl;
+    dy*=dy;
+    dx*=dx;
+    return std::sqrt(dx+dy);
+}
 void AISystem::update(MapSystem& map, double dt){
     /** 
      * Smallest elements appear at top of the priority queue 
@@ -73,7 +96,9 @@ void AISystem::update(MapSystem& map, double dt){
                 double new_cost = cost_so_far[current] + manhattan_distance(current, next);
                 if(!cost_so_far.count(next) || new_cost < cost_so_far[next]){
                     cost_so_far[next] = new_cost;
-                    next.cost = new_cost + manhattan_distance(end,next);
+                    double h = euclidean_distance(end,next);
+                    next.cost = new_cost + h;
+                    std::cout<<"g/h ratio: "<<new_cost/h<<std::endl;
                     frontier.push(next);
                     came_from[next] = current;
 

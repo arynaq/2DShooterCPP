@@ -51,4 +51,5 @@ struct AISystem : System<Requires<AIComponent>> {
 
     private:
         double manhattan_distance(Node& start, Node& end);
+        double euclidean_distance(Node& start, Node& end);
 };
