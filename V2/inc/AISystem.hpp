@@ -23,11 +23,15 @@ struct AISystem : System<Requires<AIComponent>> {
         }
 
         bool operator==(const Node& other) const {
-            int x = location.getComponent<TileComponent>().shape.getPosition().x;
-            int y = location.getComponent<TileComponent>().shape.getPosition().y;
-            int ox = other.location.getComponent<TileComponent>().shape.getPosition().x;
-            int oy = other.location.getComponent<TileComponent>().shape.getPosition().y;
-            return x==ox && y == oy;
+            auto& index = location.getComponent<TileComponent>().index;
+            auto& oindex = other.location.getComponent<TileComponent>().index; 
+            return index == oindex;
+        }
+
+        bool operator!=(const Node& other) const {
+            auto& index = location.getComponent<TileComponent>().index;
+            auto& oindex = other.location.getComponent<TileComponent>().index; 
+            return index!=oindex;
         }
     };
 

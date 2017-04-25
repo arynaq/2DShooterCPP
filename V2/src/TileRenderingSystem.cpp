@@ -18,6 +18,12 @@ void TileRenderingSystem::render(){
     auto& entities = getEntities();
     for(auto& entity : entities){
         auto& shape = entity.getComponent<TileComponent>().shape;
+        if(entity.getComponent<TileComponent>().tagged){
+            shape.setFillColor(sf::Color::Cyan);
+        }
+        else {
+            shape.setFillColor(sf::Color::Transparent);
+        }
         getRenderTarget().draw(shape);
     }
 }

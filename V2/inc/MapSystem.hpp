@@ -15,6 +15,8 @@ struct MapSystem : System<Requires<TileComponent>>{
     bool checkTileCollision(Entity entity);
     std::vector<Entity> getNeighboringTiles(const Entity& e);
     Entity getOccupiedTile(const Entity& e);
+
+    void refresh();
 private:
     TileMap tileMap;
     const int tileSize = 32;

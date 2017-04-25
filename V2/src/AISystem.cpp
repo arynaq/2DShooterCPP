@@ -23,17 +23,14 @@ using NodeHash = AISystem::NodeHash;
 using EntityHash = AISystem::EntityHash;
 using CostMap =  std::unordered_map<Node, double, NodeHash>;
 using PathMap =  std::unordered_map<Node, Node, NodeHash>;
+using Path = std::vector<Node>;
 
 
 double AISystem::manhattan_distance(Node& start, Node& end){
-    auto& startTile = start.location;
-    auto& endTile = end.location;
-    auto& endTileShape = endTile.getComponent<TileComponent>().shape;
-    auto& startTileShape = startTile.getComponent<TileComponent>().shape;
-    auto width = endTileShape.getSize().x;
-    auto height = endTileShape.getSize().y;
-    double dx = (1.0/width) * std::abs(endTileShape.getPosition().x - startTileShape.getPosition().x);
-    double dy = (1.0/height) * std::abs(endTileShape.getPosition().y - startTileShape.getPosition().y);
+    auto& startIndex = start.location.getComponent<TileComponent>().index;
+    auto& endIndex = end.location.getComponent<TileComponent>().index;
+    double dy = std::abs(startIndex.first - endIndex.first);
+    double dx = std::abs(startIndex.second - endIndex.second);
     return dx + dy;
 }
 void AISystem::update(MapSystem& map, double dt){
@@ -45,45 +42,63 @@ void AISystem::update(MapSystem& map, double dt){
     };
     auto& entities = getEntities();
     for(auto& entity : entities){
+
+        map.refresh();
         CostMap cost_so_far;
         PathMap came_from;
+        Path path;
 
         std::priority_queue<Node,std::vector<Node>,decltype(cmp) > frontier(cmp);
         Node start{map.getOccupiedTile(entity), 0 };
         Node end{map.getOccupiedTile(entity.getComponent<AIComponent>().target), 0};
-        return;
         frontier.push(start);
 
         auto& transformComponent = entity.getComponent<TransformComponent>().transform;
-        std::cout<<"AI tracing for entity at: " << transformComponent.getPosition().x<<",";
         std::cout<<transformComponent.getPosition().y<<std::endl;
 
 
         while(!frontier.empty()){
             auto current = frontier.top();
+            auto& neighborTile = current.location.getComponent<TileComponent>();
+            std::cout<<neighborTile.index.first<<","<<neighborTile.index.second<<std::endl;
             frontier.pop();
             if(end == current){
                 std::cout<<"Found target!"<<std::endl;
-                return;
+                came_from[end] = current;
+                break;
             }
             auto neighbors = map.getNeighboringTiles(current.location);
-            auto& currentTile = current.location.getComponent<TileComponent>();
-            std::cout<<"Neighbors for current "<<currentTile.index.first<<","<<currentTile.index.second<<": ";
-            std::cout<<std::endl;
             for(auto& neighbor : neighbors){
-                auto& neighborTile = neighbor.getComponent<TileComponent>();
-                std::cout<<neighborTile.index.first<<","<<neighborTile.index.second<<std::endl;
                 Node next{neighbor, 0};
-                double heuristic = manhattan_distance(next, end);
-                if(!came_from.count(next)){
-                    next.cost = heuristic;
+                double new_cost = cost_so_far[current] + manhattan_distance(current, next);
+                if(!cost_so_far.count(next) || new_cost < cost_so_far[next]){
+                    cost_so_far[next] = new_cost;
+                    next.cost = new_cost + manhattan_distance(end,next);
                     frontier.push(next);
                     came_from[next] = current;
+
                 }
-                std::cout<<"Cost: " << next.cost << std::endl;
+                /**
+                  Node next{neighbor, 0};
+                  double heuristic = manhattan_distance(next, end);
+                  if(!came_from.count(next)){
+                  next.cost = heuristic;
+                  frontier.push(next);
+                  came_from[next] = current;
+                  }
+                 **/
             }
         }
 
+        Node n = end;
+        while(n!=start){
+            n = came_from[n];
+            path.push_back(n);
+        }
+        path.push_back(start);
+        for(auto& p : path){
 
+            p.location.getComponent<TileComponent>().tagged = true;
+        }
     }
 }

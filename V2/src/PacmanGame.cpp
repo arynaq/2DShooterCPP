@@ -33,7 +33,7 @@ void PacmanGame::init(){
     auto ghostOne = m_world.createEntity();
     auto& spriteSheetComponentOne = ghostOne.addComponent<SpriteSheetComponent>();
     ghostOne.addComponent<TransformComponent>().transform.setPosition(256,672);
-    ghostOne.addComponent<VelocityComponent>().velocity.x = 1;
+    ghostOne.addComponent<VelocityComponent>().velocity.x = 50;
     ghostOne.addComponent<DirectionComponent>().direction = DirectionComponent::Direction::EAST;
     ghostOne.addComponent<CollisionComponent>();
     ghostOne.addComponent<AIComponent>().target = m_player;

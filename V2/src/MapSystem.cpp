@@ -11,7 +11,6 @@ void MapSystem::initialize(){
             auto& tileComponent = tile.addComponent<TileComponent>();
             if(map[i][j] == 1){
                 tileComponent.shape.setFillColor(sf::Color::Transparent);
-                tileComponent.shape.setOutlineThickness(1);
                 tileComponent.passable = true;
             }
             if(map[i][j] == 0){
@@ -29,12 +28,19 @@ void MapSystem::initialize(){
     }
 }
 
+void MapSystem::refresh(){
+    for(std::size_t i=0; i<32; ++i){
+        for(std::size_t j=0; j<32; ++j){
+            tileMap[i][j].getComponent<TileComponent>().tagged = false;
+        }
+    }
+}
+
 Entity MapSystem::getOccupiedTile(const Entity& e){
     auto entityCollisionBox = e.getComponent<CollisionComponent>().collisionBox;
     std::size_t j = (entityCollisionBox.left + (entityCollisionBox.width * 0.5))/ tileSize;
     std::size_t i = (entityCollisionBox.top + (entityCollisionBox.height * 0.5))/ tileSize;
     assert(i<tileMap.size() && j<tileMap.size() && "Entity is outside mapp..");
-    std::cout<<"i,j for entity: " << i<<","<<j<<std::endl;
     return tileMap[i][j];
 }
 
