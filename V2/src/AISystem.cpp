@@ -5,6 +5,7 @@
 #include <vector>
 #include <functional>
 #include <unordered_map>
+#include <algorithm>
 
 /**
  * @TODO:
@@ -31,29 +32,32 @@ double AISystem::manhattan_distance(Node& start, Node& end){
     auto& endIndex = end.location.getComponent<TileComponent>().index;
     double dy = std::abs(startIndex.first - endIndex.first);
     double dx = std::abs(startIndex.second - endIndex.second);
+    std::cout<<"is,js"<<startIndex.first<<","<<startIndex.second<<std::endl;
+    std::cout<<"ie,je"<<endIndex.first<<","<<endIndex.second<<std::endl;
+    std::cout<<"dx,dy: " << dx <<","<<dy<<std::endl;
     return dx + dy;
+}
+
+double AISystem::custom_heurestic(Node& start, Node& end){
+    auto& startIndex = start.location.getComponent<TileComponent>().index;
+    auto& endIndex = end.location.getComponent<TileComponent>().index;
+    int x = std::max(startIndex.first, endIndex.first);
+    int y = std::max(startIndex.second, endIndex.second);
+    int score = std::min(x,y);
+    if(x == 0)
+        score = y;
+    if(y == 0) 
+        score = x;
+    if(score == 0)
+        return score;
+    return score + (double)std::max(x,y)/score;
 }
 
 double AISystem::euclidean_distance(Node& start, Node& end){
     auto& startIndex = start.location.getComponent<TileComponent>().index;
     auto& endIndex = end.location.getComponent<TileComponent>().index;
-    double dx, dy;
-    if(startIndex.first > endIndex.first){
-        dy = (startIndex.first - endIndex.first);
-    }
-    else{
-        dy = (endIndex.first - startIndex.first);
-    }
-
-    if(startIndex.second > endIndex.second){
-        dx = startIndex.second - endIndex.second;
-    }
-    else {
-        dx = endIndex.second - startIndex.second;
-    }
-    std::cout<<"dx,dy: " << dx << "," << dy <<std::endl;
-    dy*=dy;
-    dx*=dx;
+    double dy = (startIndex.first - endIndex.first)*(startIndex.first - endIndex.first);
+    double dx = (startIndex.second - endIndex.second)*(startIndex.second - endIndex.second);
     return std::sqrt(dx+dy);
 }
 void AISystem::update(MapSystem& map, double dt){
@@ -76,29 +80,27 @@ void AISystem::update(MapSystem& map, double dt){
         Node end{map.getOccupiedTile(entity.getComponent<AIComponent>().target), 0};
         frontier.push(start);
 
-        auto& transformComponent = entity.getComponent<TransformComponent>().transform;
-        std::cout<<transformComponent.getPosition().y<<std::endl;
 
 
+        int cntr = 0;
         while(!frontier.empty()){
             auto current = frontier.top();
-            auto& neighborTile = current.location.getComponent<TileComponent>();
-            std::cout<<neighborTile.index.first<<","<<neighborTile.index.second<<std::endl;
             frontier.pop();
             if(end == current){
-                std::cout<<"Found target!"<<std::endl;
+                std::cout<<"Find count: " << cntr <<std::endl;
                 came_from[end] = current;
+                cntr = 0;
                 break;
             }
             auto neighbors = map.getNeighboringTiles(current.location);
             for(auto& neighbor : neighbors){
                 Node next{neighbor, 0};
-                double new_cost = cost_so_far[current] + manhattan_distance(current, next);
+                //if(next == current) continue;
+                double new_cost = cost_so_far[current] + 1;//manhattan_distance(current, next);
                 if(!cost_so_far.count(next) || new_cost < cost_so_far[next]){
                     cost_so_far[next] = new_cost;
-                    double h = euclidean_distance(end,next);
+                    double h = 10*euclidean_distance(end,next);
                     next.cost = new_cost + h;
-                    std::cout<<"g/h ratio: "<<new_cost/h<<std::endl;
                     frontier.push(next);
                     came_from[next] = current;
 
@@ -113,6 +115,7 @@ void AISystem::update(MapSystem& map, double dt){
                   }
                  **/
             }
+            cntr++;
         }
 
         Node n = end;

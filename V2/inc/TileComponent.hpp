@@ -5,7 +5,7 @@
 
 struct TileComponent : Component{
     sf::RectangleShape shape{sf::Vector2f(32,32)};
-    std::pair<std::size_t, std::size_t> index;
+    std::pair<int, int> index;
     bool passable = false;
     bool tagged = false;
 }; 
