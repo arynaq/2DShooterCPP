@@ -21,7 +21,7 @@ PacmanGame::PacmanGame(sf::RenderTarget& renderer):
 void PacmanGame::init(){
     m_player = m_world.createEntity();
     auto& spriteSheetComponent = m_player.addComponent<SpriteSheetComponent>();
-    m_player.addComponent<TransformComponent>().transform.setPosition(150,150);
+    m_player.addComponent<TransformComponent>().transform.setPosition(256,480);
     m_player.addComponent<PlayerComponent>().startSpeed = 100;
     m_player.addComponent<DirectionComponent>();
     m_player.addComponent<VelocityComponent>();
@@ -32,8 +32,8 @@ void PacmanGame::init(){
 
     auto ghostOne = m_world.createEntity();
     auto& spriteSheetComponentOne = ghostOne.addComponent<SpriteSheetComponent>();
-    ghostOne.addComponent<TransformComponent>().transform.setPosition(100,300);
-    ghostOne.addComponent<VelocityComponent>().velocity.x = 100;
+    ghostOne.addComponent<TransformComponent>().transform.setPosition(256,672);
+    ghostOne.addComponent<VelocityComponent>().velocity.x = 1;
     ghostOne.addComponent<DirectionComponent>().direction = DirectionComponent::Direction::EAST;
     ghostOne.addComponent<CollisionComponent>();
     ghostOne.addComponent<AIComponent>().target = m_player;
@@ -59,10 +59,11 @@ void PacmanGame::render(){
 void PacmanGame::update(float dt){
     m_world.refresh();
     m_inputSystem.update();
-    m_AISystem.update(m_mapSystem, dt);
     m_movementSystem.update(m_mapSystem,dt);
     m_collisionSystem.update(dt);
     m_spriteManagementSystem.update();
+
+    m_AISystem.update(m_mapSystem, dt);
 }
 
 void PacmanGame::handleEvent(sf::Event& event){

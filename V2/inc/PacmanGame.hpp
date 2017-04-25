@@ -42,7 +42,6 @@ class PacmanGame {
         AISystem& m_AISystem;
         void loadTextures();
 
-
 };
 
 

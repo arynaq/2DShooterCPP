@@ -4,6 +4,7 @@
 #include <cmath>
 #include <vector>
 #include <functional>
+#include <unordered_map>
 
 /**
  * @TODO:
@@ -14,48 +15,75 @@
  *    An unordered_map for each tile to show whether it has been visited
  *    http://web.mit.edu/eranki/www/tutorials/search/
  *http://stackoverflow.com/questions/6990168/a-star-algorithm
- http://www.redblobgames.com/pathfinding/a-star/implementation.html
+http://www.redblobgames.com/pathfinding/a-star/implementation.html
  *    */
+
+using Node = AISystem::Node;
+using NodeHash = AISystem::NodeHash;
+using EntityHash = AISystem::EntityHash;
+using CostMap =  std::unordered_map<Node, double, NodeHash>;
+using PathMap =  std::unordered_map<Node, Node, NodeHash>;
+
+
+double AISystem::manhattan_distance(Node& start, Node& end){
+    auto& startTile = start.location;
+    auto& endTile = end.location;
+    auto& endTileShape = endTile.getComponent<TileComponent>().shape;
+    auto& startTileShape = startTile.getComponent<TileComponent>().shape;
+    auto width = endTileShape.getSize().x;
+    auto height = endTileShape.getSize().y;
+    double dx = (1.0/width) * std::abs(endTileShape.getPosition().x - startTileShape.getPosition().x);
+    double dy = (1.0/height) * std::abs(endTileShape.getPosition().y - startTileShape.getPosition().y);
+    return dx + dy;
+}
 void AISystem::update(MapSystem& map, double dt){
+    /** 
+     * Smallest elements appear at top of the priority queue 
+     * */
+    auto cmp = [](const Node& left, const Node& right){
+        return left > right;
+    };
     auto& entities = getEntities();
     for(auto& entity : entities){
-        auto cmp = [](ANode* left, ANode* right){
-            return (*left)>(*right);
-        };
-        std::priority_queue<ANode*,std::vector<ANode*>,decltype(cmp) > frontier(cmp);
-        auto neighbors = map.getNeighboringTiles(entity);
-        ANode* start = new ANode{nullptr, map.getOccupiedTile(entity), 0, 0, 0};
-        ANode* end   = new ANode{nullptr, map.getOccupiedTile(entity.getComponent<AIComponent>().target),0,0,0};
+        CostMap cost_so_far;
+        PathMap came_from;
 
+        std::priority_queue<Node,std::vector<Node>,decltype(cmp) > frontier(cmp);
+        Node start{map.getOccupiedTile(entity), 0 };
+        Node end{map.getOccupiedTile(entity.getComponent<AIComponent>().target), 0};
+        return;
         frontier.push(start);
+
+        auto& transformComponent = entity.getComponent<TransformComponent>().transform;
+        std::cout<<"AI tracing for entity at: " << transformComponent.getPosition().x<<",";
+        std::cout<<transformComponent.getPosition().y<<std::endl;
+
+
         while(!frontier.empty()){
-
-            auto current = *(frontier.top());
-        std::cout<<"Checking location: " << current.location.getComponent<TileComponent>().shape.getPosition().x;
-        std::cout<<"," << current.location.getComponent<TileComponent>().shape.getPosition().y;
-        std::cout<<" vs "<< end->location.getComponent<TileComponent>().shape.getPosition().x;
-        std::cout<<","<< end->location.getComponent<TileComponent>().shape.getPosition().y<<std::endl;
-            std::cout<<"Frontier size: " << frontier.size()<<std::endl;
-            auto& currentTile = current.location.getComponent<TileComponent>().shape;
-            if(*end == current){
+            auto current = frontier.top();
+            frontier.pop();
+            if(end == current){
                 std::cout<<"Found target!"<<std::endl;
-                break;
+                return;
             }
-
+            auto neighbors = map.getNeighboringTiles(current.location);
+            auto& currentTile = current.location.getComponent<TileComponent>();
+            std::cout<<"Neighbors for current "<<currentTile.index.first<<","<<currentTile.index.second<<": ";
+            std::cout<<std::endl;
             for(auto& neighbor : neighbors){
-                ANode* next = new ANode{&current, neighbor, 0, 0, 0};
-                auto& neighborTile  = neighbor.getComponent<TileComponent>().shape;
-                double dx = std::abs(currentTile.getPosition().x - neighborTile.getPosition().x)*1.0/32;
-                double dy = std::abs(currentTile.getPosition().y - neighborTile.getPosition().y)*1.0/32;
-                // manhattan cost
-                double m_cost = dx + dy;
-                double newCost = current.f + m_cost;
-                if(newCost < next.f){
-
+                auto& neighborTile = neighbor.getComponent<TileComponent>();
+                std::cout<<neighborTile.index.first<<","<<neighborTile.index.second<<std::endl;
+                Node next{neighbor, 0};
+                double heuristic = manhattan_distance(next, end);
+                if(!came_from.count(next)){
+                    next.cost = heuristic;
+                    frontier.push(next);
+                    came_from[next] = current;
                 }
-                next->f = cost;
-                frontier.push(next);
+                std::cout<<"Cost: " << next.cost << std::endl;
             }
         }
+
+
     }
 }
