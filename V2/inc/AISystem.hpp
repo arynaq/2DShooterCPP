@@ -55,5 +55,5 @@ struct AISystem : System<Requires<AIComponent>> {
         double custom_heurestic(Node& start, Node& end);
         bool isCentered(sf::FloatRect& tileBox, sf::FloatRect& entityBox);
 
-        bool centered = false;
+        std::unordered_map<std::size_t, bool> centeredMap;
 };

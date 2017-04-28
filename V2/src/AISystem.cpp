@@ -133,7 +133,7 @@ void AISystem::update(MapSystem& map, double dt){
             int deltaIIndex = nextTile.index.first - startTile.index.first;
             auto direction = Direction::UNDEFINED;
 
-            if(!centered){
+            if(!centeredMap.count(entity.getID().index)){
                 float entityCenterX = entityBox.left + entityBox.width/2;
                 float entityCenterY = entityBox.top + entityBox.height/2;
                 float startCenterX = startBox.left + startBox.width/2;
@@ -141,7 +141,7 @@ void AISystem::update(MapSystem& map, double dt){
                 float dx = entityCenterX  - startCenterX;
                 float dy = entityCenterY  - startCenterY;
                 entity.getComponent<TransformComponent>().transform.move(-dx,-dy);
-                centered = true;
+                centeredMap[entity.getID().index] = true;
             }
             if(isCentered(startBox,entityBox)){
                 if(deltaIIndex < 0 )

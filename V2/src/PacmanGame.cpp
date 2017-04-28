@@ -40,9 +40,20 @@ void PacmanGame::init(){
     spriteSheetComponentOne.textureSourceID = "redghost";
     spriteSheetComponentOne.sprite.setTextureRect(sf::IntRect(0,0,32,32));
 
+    auto ghostTwo = m_world.createEntity();
+    auto& spriteSheetComponentTwo = ghostTwo.addComponent<SpriteSheetComponent>();
+    ghostTwo.addComponent<TransformComponent>().transform.setPosition(350,672);
+    ghostTwo.addComponent<VelocityComponent>().baseSpeed = 60;
+    ghostTwo.addComponent<DirectionComponent>().direction = DirectionComponent::Direction::UNDEFINED;
+    ghostTwo.addComponent<CollisionComponent>();
+    ghostTwo.addComponent<AIComponent>().target = m_player;
+    spriteSheetComponentTwo.textureSourceID = "blueghost";
+    spriteSheetComponentTwo.sprite.setTextureRect(sf::IntRect(0,0,32,32));
+
 
     m_player.activate();
     ghostOne.activate();
+    ghostTwo.activate();
     m_world.messageHandler().subscribe<PlayerStateChangedEvent>(m_spriteManagementSystem);
     m_world.messageHandler().subscribe<DirectionChangedEvent>(m_spriteManagementSystem);
     m_world.messageHandler().subscribe<DirectionChangedEvent>(m_movementSystem);

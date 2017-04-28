@@ -44,6 +44,7 @@ void MapSystem::refresh(){
     for(std::size_t i=0; i<32; ++i){
         for(std::size_t j=0; j<32; ++j){
             tileMap[i][j].getComponent<TileComponent>().tagged = false;
+            tileMap[i][j].getComponent<TileComponent>().occupied = false;
         }
     }
 }

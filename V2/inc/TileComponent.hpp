@@ -8,4 +8,5 @@ struct TileComponent : Component{
     std::pair<int, int> index;
     bool passable = false;
     bool tagged = false;
+    bool occupied = false;
 }; 
