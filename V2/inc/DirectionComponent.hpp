@@ -6,6 +6,7 @@ struct DirectionComponent : Component{
         NORTH = 0,
         SOUTH,
         WEST,
-        EAST
+        EAST,
+        UNDEFINED
     }direction;
 };

@@ -6,6 +6,7 @@
 #include <functional>
 #include <unordered_map>
 #include <algorithm>
+#include "World.hpp"
 
 /**
  * @TODO:
@@ -75,6 +76,7 @@ void AISystem::update(MapSystem& map, double dt){
         PathMap came_from;
         Path path;
 
+        /** Priority queue, top is always least cost node **/
         std::priority_queue<Node,std::vector<Node>,decltype(cmp) > frontier(cmp);
         Node start{map.getOccupiedTile(entity), 0 };
         Node end{map.getOccupiedTile(entity.getComponent<AIComponent>().target), 0};
@@ -82,14 +84,11 @@ void AISystem::update(MapSystem& map, double dt){
 
 
 
-        int cntr = 0;
         while(!frontier.empty()){
             auto current = frontier.top();
             frontier.pop();
             if(end == current){
-                std::cout<<"Find count: " << cntr <<std::endl;
                 came_from[end] = current;
-                cntr = 0;
                 break;
             }
             auto neighbors = map.getNeighboringTiles(current.location);
@@ -115,18 +114,63 @@ void AISystem::update(MapSystem& map, double dt){
                   }
                  **/
             }
-            cntr++;
         }
 
         Node n = end;
         while(n!=start){
             n = came_from[n];
             path.push_back(n);
-        }
-        path.push_back(start);
-        for(auto& p : path){
 
+        }
+        for(auto& p : path){
             p.location.getComponent<TileComponent>().tagged = true;
+        }
+
+        using Direction = DirectionComponent::Direction;
+
+        if(entity.hasComponent<DirectionComponent>() && path.size()>=2){
+            auto& nextTile = path[path.size()-2].location.getComponent<TileComponent>();
+            auto& startTile = path[path.size()-1].location.getComponent<TileComponent>();
+            auto& entityBox = entity.getComponent<CollisionComponent>().collisionBox;
+            auto  startBox = startTile.shape.getGlobalBounds();
+            int deltaJIndex = nextTile.index.second - startTile.index.second;
+            int deltaIIndex = nextTile.index.first - startTile.index.first;
+            int directionX = 0;
+            int directionY = 0;
+
+            Direction d = Direction::UNDEFINED;
+            if(deltaIIndex < 0){
+                d = Direction::NORTH;
+                directionY = -1;
+            }
+            else if(deltaIIndex > 0){
+                d = Direction::SOUTH;
+                directionY = 1;
+            }
+            else if(deltaJIndex < 0){
+                d = Direction::WEST;
+                directionX = -1;
+            }
+            else if(deltaJIndex > 0){
+                d = Direction::EAST;
+                directionX = 1;
+            }
+            sf::FloatRect next(entity.getComponent<CollisionComponent>().collisionBox);
+            next.top += directionY*next.height;
+            next.left += directionX*next.height;
+            if(!map.isPassable(next)){
+                if(d == Direction::EAST){
+                    if(entityBox.top < startBox.top) 
+                        d = Direction::SOUTH;
+                    else 
+                        d = Direction::NORTH
+                }
+                else if(d == DIRECTION::WEST){
+                    if(entityBox.top < startBox.top)
+                }
+
+            }
+            getWorld().messageHandler().emit<DirectionChangedEvent>(entity, d);
         }
     }
 }

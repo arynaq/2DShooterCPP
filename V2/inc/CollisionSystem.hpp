@@ -10,7 +10,10 @@ struct CollisionSystem:
     System<Requires<CollisionComponent, TransformComponent, VelocityComponent>>,
     Receiver<CollisionSystem>
 {
-    void receive(const TileCollisionEvent& event);
-    void update(double dt);
+    void update(MapSystem& map, double dt);
     double m_dt;
+
+private:
+    void checkTileCollision(MapSystem& map, Entity& entity);
+    
 };

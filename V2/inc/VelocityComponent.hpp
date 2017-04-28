@@ -5,4 +5,5 @@
 
 struct VelocityComponent : Component {
     sf::Vector2f velocity;
+    float baseSpeed;
 };

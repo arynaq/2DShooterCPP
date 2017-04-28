@@ -28,6 +28,18 @@ void MapSystem::initialize(){
     }
 }
 
+int MapSystem::size() const {
+    return tileMap.size();
+}
+
+bool MapSystem::isPassable(Index& index) const{
+    if(index.first >= tileMap.size() || index.second >= tileMap.size())
+        return false;
+    if(map[index.first][index.second] == 1)
+        return true;
+    return false;
+}
+
 void MapSystem::refresh(){
     for(std::size_t i=0; i<32; ++i){
         for(std::size_t j=0; j<32; ++j){
@@ -40,7 +52,11 @@ Entity MapSystem::getOccupiedTile(const Entity& e){
     auto entityCollisionBox = e.getComponent<CollisionComponent>().collisionBox;
     std::size_t j = (entityCollisionBox.left + (entityCollisionBox.width * 0.5))/ tileSize;
     std::size_t i = (entityCollisionBox.top + (entityCollisionBox.height * 0.5))/ tileSize;
-    assert(i<tileMap.size() && j<tileMap.size() && "Entity is outside mapp..");
+    assert(i<tileMap.size() && j<tileMap.size() && "Entity is outside map..");
+    return tileMap[i][j];
+}
+
+const Entity& MapSystem::getTile(int i, int j){
     return tileMap[i][j];
 }
 
@@ -186,5 +202,17 @@ bool MapSystem::checkTileCollision(Entity entity){
         }
     }
     return false;
+}
+
+bool MapSystem::isPassable(sf::FloatRect& rect) const {
+    Index topLeft(rect.top/tileSize, rect.left/tileSize);
+    Index topRight(rect.top/tileSize, (rect.left + rect.width)/tileSize);
+    Index bottomLeft((rect.top+rect.height)/tileSize, rect.left/tileSize);
+    Index bottomRight((rect.top+rect.height)/tileSize, (rect.left+rect.width)/tileSize);
+
+    bool pass = isPassable(topLeft) && isPassable(topRight)
+        && isPassable(bottomLeft) && isPassable(bottomRight);
+
+    return pass;
 }
 

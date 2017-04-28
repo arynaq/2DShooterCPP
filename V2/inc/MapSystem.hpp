@@ -6,9 +6,11 @@
 #include <array>
 #include <map>
 #include <vector>
+#include <utility>
 
 using TileRow = std::array<Entity, 32>;
 using TileMap = std::array<TileRow, 32>;
+using Index = std::pair<std::size_t,std::size_t>;
 
 struct MapSystem : System<Requires<TileComponent>>{
     void initialize() override;
@@ -17,9 +19,13 @@ struct MapSystem : System<Requires<TileComponent>>{
     Entity getOccupiedTile(const Entity& e);
 
     void refresh();
+    const int tileSize = 32;
+    int size() const;
+    const Entity& getTile(int i, int j);
+    bool isPassable(Index& index) const;
+    bool isPassable(sf::FloatRect& rect) const;
 private:
     TileMap tileMap;
-    const int tileSize = 32;
     const int map[32][32] = {
         {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
         {0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0},

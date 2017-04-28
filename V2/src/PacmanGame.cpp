@@ -22,7 +22,7 @@ void PacmanGame::init(){
     m_player = m_world.createEntity();
     auto& spriteSheetComponent = m_player.addComponent<SpriteSheetComponent>();
     m_player.addComponent<TransformComponent>().transform.setPosition(256,480);
-    m_player.addComponent<PlayerComponent>().startSpeed = 100;
+    m_player.addComponent<PlayerComponent>().startSpeed = 80;
     m_player.addComponent<DirectionComponent>();
     m_player.addComponent<VelocityComponent>();
     m_player.addComponent<CollisionComponent>();
@@ -33,7 +33,7 @@ void PacmanGame::init(){
     auto ghostOne = m_world.createEntity();
     auto& spriteSheetComponentOne = ghostOne.addComponent<SpriteSheetComponent>();
     ghostOne.addComponent<TransformComponent>().transform.setPosition(256,672);
-    ghostOne.addComponent<VelocityComponent>().velocity.x = 50;
+    ghostOne.addComponent<VelocityComponent>().baseSpeed = 64;
     ghostOne.addComponent<DirectionComponent>().direction = DirectionComponent::Direction::EAST;
     ghostOne.addComponent<CollisionComponent>();
     ghostOne.addComponent<AIComponent>().target = m_player;
@@ -45,6 +45,8 @@ void PacmanGame::init(){
     ghostOne.activate();
     m_world.messageHandler().subscribe<PlayerStateChangedEvent>(m_spriteManagementSystem);
     m_world.messageHandler().subscribe<DirectionChangedEvent>(m_spriteManagementSystem);
+    m_world.messageHandler().subscribe<DirectionChangedEvent>(m_movementSystem);
+    m_world.messageHandler().subscribe<CollisionResolutionEvent>(m_movementSystem);
     m_world.messageHandler().emit<DirectionChangedEvent>(ghostOne, DirectionComponent::Direction::EAST);
     m_running = true;
 }
@@ -59,11 +61,10 @@ void PacmanGame::render(){
 void PacmanGame::update(float dt){
     m_world.refresh();
     m_inputSystem.update();
-    m_movementSystem.update(m_mapSystem,dt);
-    m_collisionSystem.update(dt);
-    m_spriteManagementSystem.update();
-
+    m_collisionSystem.update(m_mapSystem, dt);
+    m_movementSystem.update(dt);
     m_AISystem.update(m_mapSystem, dt);
+    m_spriteManagementSystem.update();
 }
 
 void PacmanGame::handleEvent(sf::Event& event){
