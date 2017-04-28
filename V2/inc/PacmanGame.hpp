@@ -21,7 +21,7 @@ class PacmanGame {
         void render();
         void handleEvent(sf::Event& event);
     
-        const double frame_dt = 1.0/30;
+        const double frame_dt = 1.0/60;
 
     private:
         bool m_running;

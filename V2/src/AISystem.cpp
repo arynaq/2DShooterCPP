@@ -33,9 +33,6 @@ double AISystem::manhattan_distance(Node& start, Node& end){
     auto& endIndex = end.location.getComponent<TileComponent>().index;
     double dy = std::abs(startIndex.first - endIndex.first);
     double dx = std::abs(startIndex.second - endIndex.second);
-    std::cout<<"is,js"<<startIndex.first<<","<<startIndex.second<<std::endl;
-    std::cout<<"ie,je"<<endIndex.first<<","<<endIndex.second<<std::endl;
-    std::cout<<"dx,dy: " << dx <<","<<dy<<std::endl;
     return dx + dy;
 }
 
@@ -127,50 +124,45 @@ void AISystem::update(MapSystem& map, double dt){
         }
 
         using Direction = DirectionComponent::Direction;
-
         if(entity.hasComponent<DirectionComponent>() && path.size()>=2){
-            auto& nextTile = path[path.size()-2].location.getComponent<TileComponent>();
             auto& startTile = path[path.size()-1].location.getComponent<TileComponent>();
+            auto& nextTile = path[path.size()-2].location.getComponent<TileComponent>();
             auto& entityBox = entity.getComponent<CollisionComponent>().collisionBox;
-            auto  startBox = startTile.shape.getGlobalBounds();
+            auto startBox = startTile.shape.getGlobalBounds();
             int deltaJIndex = nextTile.index.second - startTile.index.second;
             int deltaIIndex = nextTile.index.first - startTile.index.first;
-            int directionX = 0;
-            int directionY = 0;
+            auto direction = Direction::UNDEFINED;
 
-            Direction d = Direction::UNDEFINED;
-            if(deltaIIndex < 0){
-                d = Direction::NORTH;
-                directionY = -1;
+            if(!centered){
+                float entityCenterX = entityBox.left + entityBox.width/2;
+                float entityCenterY = entityBox.top + entityBox.height/2;
+                float startCenterX = startBox.left + startBox.width/2;
+                float startCenterY = startBox.top  + startBox.height/2;
+                float dx = entityCenterX  - startCenterX;
+                float dy = entityCenterY  - startCenterY;
+                entity.getComponent<TransformComponent>().transform.move(-dx,-dy);
+                centered = true;
             }
-            else if(deltaIIndex > 0){
-                d = Direction::SOUTH;
-                directionY = 1;
+            if(isCentered(startBox,entityBox)){
+                if(deltaIIndex < 0 )
+                    direction = Direction::NORTH;
+                else if(deltaIIndex > 0)
+                    direction = Direction::SOUTH;
+                else if(deltaJIndex < 0)
+                    direction = Direction::WEST;
+                else if(deltaJIndex > 0)
+                    direction = Direction::EAST;
+                getWorld().messageHandler().emit<DirectionChangedEvent>(entity, direction);
             }
-            else if(deltaJIndex < 0){
-                d = Direction::WEST;
-                directionX = -1;
-            }
-            else if(deltaJIndex > 0){
-                d = Direction::EAST;
-                directionX = 1;
-            }
-            sf::FloatRect next(entity.getComponent<CollisionComponent>().collisionBox);
-            next.top += directionY*next.height;
-            next.left += directionX*next.height;
-            if(!map.isPassable(next)){
-                if(d == Direction::EAST){
-                    if(entityBox.top < startBox.top) 
-                        d = Direction::SOUTH;
-                    else 
-                        d = Direction::NORTH
-                }
-                else if(d == DIRECTION::WEST){
-                    if(entityBox.top < startBox.top)
-                }
 
-            }
-            getWorld().messageHandler().emit<DirectionChangedEvent>(entity, d);
         }
     }
+}
+
+
+bool AISystem::isCentered(sf::FloatRect& tile, sf::FloatRect& entity){
+    return tile.contains(entity.left, entity.top)
+        && tile.contains(entity.left+entity.width, entity.top)
+        && tile.contains(entity.left,entity.top+entity.height)
+        && tile.contains(entity.left+entity.width, entity.height+entity.top);
 }

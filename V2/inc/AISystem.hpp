@@ -53,4 +53,7 @@ struct AISystem : System<Requires<AIComponent>> {
         double manhattan_distance(Node& start, Node& end);
         double euclidean_distance(Node& start, Node& end);
         double custom_heurestic(Node& start, Node& end);
+        bool isCentered(sf::FloatRect& tileBox, sf::FloatRect& entityBox);
+
+        bool centered = false;
 };

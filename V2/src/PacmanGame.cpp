@@ -22,7 +22,7 @@ void PacmanGame::init(){
     m_player = m_world.createEntity();
     auto& spriteSheetComponent = m_player.addComponent<SpriteSheetComponent>();
     m_player.addComponent<TransformComponent>().transform.setPosition(256,480);
-    m_player.addComponent<PlayerComponent>().startSpeed = 80;
+    m_player.addComponent<PlayerComponent>().startSpeed = 120;
     m_player.addComponent<DirectionComponent>();
     m_player.addComponent<VelocityComponent>();
     m_player.addComponent<CollisionComponent>();
@@ -33,8 +33,8 @@ void PacmanGame::init(){
     auto ghostOne = m_world.createEntity();
     auto& spriteSheetComponentOne = ghostOne.addComponent<SpriteSheetComponent>();
     ghostOne.addComponent<TransformComponent>().transform.setPosition(256,672);
-    ghostOne.addComponent<VelocityComponent>().baseSpeed = 64;
-    ghostOne.addComponent<DirectionComponent>().direction = DirectionComponent::Direction::EAST;
+    ghostOne.addComponent<VelocityComponent>().baseSpeed = 60;
+    ghostOne.addComponent<DirectionComponent>().direction = DirectionComponent::Direction::UNDEFINED;
     ghostOne.addComponent<CollisionComponent>();
     ghostOne.addComponent<AIComponent>().target = m_player;
     spriteSheetComponentOne.textureSourceID = "redghost";
@@ -47,7 +47,6 @@ void PacmanGame::init(){
     m_world.messageHandler().subscribe<DirectionChangedEvent>(m_spriteManagementSystem);
     m_world.messageHandler().subscribe<DirectionChangedEvent>(m_movementSystem);
     m_world.messageHandler().subscribe<CollisionResolutionEvent>(m_movementSystem);
-    m_world.messageHandler().emit<DirectionChangedEvent>(ghostOne, DirectionComponent::Direction::EAST);
     m_running = true;
 }
 

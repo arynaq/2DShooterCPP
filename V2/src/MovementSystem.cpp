@@ -40,6 +40,9 @@ void MovementSystem::receive(const DirectionChangedEvent& event){
                 velocityComponent.velocity.x = velocityComponent.baseSpeed;
                 velocityComponent.velocity.y = 0;
                 break;
+            case DirectionComponent::Direction::UNDEFINED:
+                std::cout<<"Undefined.."<<std::endl;
+                break;
         }
     }
 }

@@ -82,8 +82,8 @@ void CollisionSystem::checkTileCollision(MapSystem& map, Entity& entity){
         if(entityCollisionBox.intersects(tileCollisionBox.getGlobalBounds())){
             float dx = (entityCollisionBox.left - tileCollisionBox.getPosition().x);
             float dy = (entityCollisionBox.top - tileCollisionBox.getPosition().y);
-            float overlapWidth = tileCollisionBox.getSize().x - std::abs(dx) + 1;
-            float overlapHeight = tileCollisionBox.getSize().y - std::abs(dy) + 1;
+            float overlapWidth = tileCollisionBox.getSize().x - std::abs(dx) + 0.5;
+            float overlapHeight = tileCollisionBox.getSize().y - std::abs(dy) + 0.5;
             sf::Vector2f dr;
             if(overlapWidth > overlapHeight){
                 if(dy<0)
