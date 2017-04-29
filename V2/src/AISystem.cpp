@@ -66,6 +66,7 @@ void AISystem::update(MapSystem& map, double dt){
         return left > right;
     };
     auto& entities = getEntities();
+    std::vector<Entity> visitedTiles;
     for(auto& entity : entities){
 
         map.refresh();
@@ -90,8 +91,7 @@ void AISystem::update(MapSystem& map, double dt){
             }
             auto neighbors = map.getNeighboringTiles(current.location);
             for(auto& neighbor : neighbors){
-                Node next{neighbor, 0};
-                //if(next == current) continue;
+                ode next{neighbor, 0};
                 double new_cost = cost_so_far[current] + 1;//manhattan_distance(current, next);
                 if(!cost_so_far.count(next) || new_cost < cost_so_far[next]){
                     cost_so_far[next] = new_cost;
@@ -99,17 +99,7 @@ void AISystem::update(MapSystem& map, double dt){
                     next.cost = new_cost + h;
                     frontier.push(next);
                     came_from[next] = current;
-
                 }
-                /**
-                  Node next{neighbor, 0};
-                  double heuristic = manhattan_distance(next, end);
-                  if(!came_from.count(next)){
-                  next.cost = heuristic;
-                  frontier.push(next);
-                  came_from[next] = current;
-                  }
-                 **/
             }
         }
 
@@ -117,7 +107,6 @@ void AISystem::update(MapSystem& map, double dt){
         while(n!=start){
             n = came_from[n];
             path.push_back(n);
-
         }
         for(auto& p : path){
             p.location.getComponent<TileComponent>().tagged = true;
