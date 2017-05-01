@@ -95,7 +95,7 @@ void AISystem::update(MapSystem& map, double dt){
                 double new_cost = cost_so_far[current] + 1;//manhattan_distance(current, next);
                 if(!cost_so_far.count(next) || new_cost < cost_so_far[next]){
                     cost_so_far[next] = new_cost;
-                    double h = 10*euclidean_distance(end,next);
+                    double h = manhattan_distance(end,next);
                     next.cost = new_cost + h;
                     frontier.push(next);
                     came_from[next] = current;

@@ -11,7 +11,7 @@ OBJEXT := o
 
 ## Flags to linker & compiler
 CC = clang++
-CC_FLAGS = -Wall -Werror -pedantic -std=c++14 -DGLEW_STATIC -O3 -ggdb
+CC_FLAGS = -Wall -Werror -pedantic -std=c++14 -DGLEW_STATIC -O0 -ggdb
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system
 INC := -I$(INCDIR)
 
