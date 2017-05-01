@@ -91,7 +91,7 @@ void AISystem::update(MapSystem& map, double dt){
             }
             auto neighbors = map.getNeighboringTiles(current.location);
             for(auto& neighbor : neighbors){
-                ode next{neighbor, 0};
+                Node next{neighbor, 0};
                 double new_cost = cost_so_far[current] + 1;//manhattan_distance(current, next);
                 if(!cost_so_far.count(next) || new_cost < cost_so_far[next]){
                     cost_so_far[next] = new_cost;
