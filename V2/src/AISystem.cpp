@@ -104,9 +104,11 @@ void AISystem::update(MapSystem& map, double dt){
         }
 
         Node n = end;
+		int counter = 0;
         while(n!=start){
             n = came_from[n];
             path.push_back(n);
+			if(counter++>100) break;
         }
         for(auto& p : path){
             p.location.getComponent<TileComponent>().tagged = true;

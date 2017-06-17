@@ -37,7 +37,7 @@ struct Filter {
 template <class... Args>
 static ComponentTypeList types(TypeList<Args...> typeList) {
     
-    printf("%s\n",__PRETTY_FUNCTION__);
+    //printf("%s\n",__PRETTY_FUNCTION__);
     return ComponentTypeList();
 }
 

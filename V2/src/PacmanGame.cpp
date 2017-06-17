@@ -28,7 +28,7 @@ void PacmanGame::init(){
     m_player.addComponent<CollisionComponent>();
     spriteSheetComponent.textureSourceID = "player";
     spriteSheetComponent.sprite.setTextureRect(sf::IntRect(0,0,32,32));
-
+    m_player.activate();
 
     auto ghostOne = m_world.createEntity();
     auto& spriteSheetComponentOne = ghostOne.addComponent<SpriteSheetComponent>();
@@ -39,7 +39,9 @@ void PacmanGame::init(){
     ghostOne.addComponent<AIComponent>().target = m_player;
     spriteSheetComponentOne.textureSourceID = "redghost";
     spriteSheetComponentOne.sprite.setTextureRect(sf::IntRect(0,0,32,32));
+    ghostOne.activate();
 
+	
     auto ghostTwo = m_world.createEntity();
     auto& spriteSheetComponentTwo = ghostTwo.addComponent<SpriteSheetComponent>();
     ghostTwo.addComponent<TransformComponent>().transform.setPosition(350,672);
@@ -49,11 +51,8 @@ void PacmanGame::init(){
     ghostTwo.addComponent<AIComponent>().target = m_player;
     spriteSheetComponentTwo.textureSourceID = "blueghost";
     spriteSheetComponentTwo.sprite.setTextureRect(sf::IntRect(0,0,32,32));
-
-
-    m_player.activate();
-    ghostOne.activate();
     ghostTwo.activate();
+
     m_world.messageHandler().subscribe<PlayerStateChangedEvent>(m_spriteManagementSystem);
     m_world.messageHandler().subscribe<DirectionChangedEvent>(m_spriteManagementSystem);
     m_world.messageHandler().subscribe<DirectionChangedEvent>(m_movementSystem);
